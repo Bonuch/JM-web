@@ -22,6 +22,8 @@ const ERROR_TEXT: Record<string, string> = {
   UNAUTHORIZED: "Сессия истекла — войдите заново",
   UNSUPPORTED_TYPE: "Поддерживаются JPG, PNG, WebP, AVIF и TIFF",
   STORAGE_FAILED: "Хранилище недоступно, попробуйте ещё раз",
+  BLOB_NOT_CONFIGURED:
+    "Хранилище Vercel Blob не подключено к проекту — файл сохранить некуда. Как это исправить, написано вверху страницы.",
   ENCODE_FAILED: "Браузер не смог подготовить превью для этого файла",
   CANVAS_UNAVAILABLE: "Браузер не смог обработать изображение",
 };

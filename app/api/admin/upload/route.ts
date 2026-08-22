@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { isAuthenticated } from "@/lib/auth";
-import { getStorage } from "@/lib/storage";
+import { getStorage, isReadOnlyDeployment } from "@/lib/storage";
 
 /**
  * Приём файла при локальной разработке: файл кладётся в public/uploads как
@@ -23,6 +23,11 @@ const SAFE_PATHNAME = /^uploads\/\d{4}\/[a-zA-Z0-9-]+\.[a-zA-Z0-9]{2,5}$/;
 export async function POST(request: Request) {
   if (!(await isAuthenticated())) {
     return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
+  }
+
+  // Диск на Vercel только для чтения: без Blob сохранять файл просто некуда
+  if (isReadOnlyDeployment()) {
+    return NextResponse.json({ error: "BLOB_NOT_CONFIGURED" }, { status: 503 });
   }
 
   const formData = await request.formData();

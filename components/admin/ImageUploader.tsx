@@ -76,7 +76,9 @@ export function ImageUploader({
           const code = error instanceof Error ? error.message : "UPLOAD_FAILED";
           setState((current) => ({
             ...current,
-            error: ERROR_TEXT[code] ?? `Не удалось загрузить «${file.name}»`,
+            // Незнакомые коды приходят из Vercel Blob. Показываем их как есть:
+            // без текста ошибки причину сбоя не понять.
+            error: ERROR_TEXT[code] ?? `Не удалось загрузить «${file.name}». ${code}`,
           }));
         }
       }

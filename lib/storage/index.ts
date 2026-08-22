@@ -30,5 +30,5 @@ export function isReadOnlyDeployment(): boolean {
   return Boolean(process.env.VERCEL) && !isBlobConfigured();
 }
 
-export { blobTokenVariableNames, getBlobToken } from "./token";
+export { blobTokenVariableNames, getBlobToken, storageVariableNames } from "./token";
 export type { StorageAdapter, StoredFile } from "./types";

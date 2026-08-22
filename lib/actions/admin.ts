@@ -15,7 +15,12 @@ import {
   upsertProject,
 } from "@/lib/content";
 import { deleteLead, formatLeadMessage, markLeadRead, notifyTelegram } from "@/lib/leads";
-import { blobTokenVariableNames, getStorage, isBlobConfigured } from "@/lib/storage";
+import {
+  blobTokenVariableNames,
+  getStorage,
+  isBlobConfigured,
+  storageVariableNames,
+} from "@/lib/storage";
 import type { ImageAsset, Project, Settings } from "@/lib/types";
 
 /** Публичные страницы кэшируются, поэтому после каждой правки сбрасываем их. */
@@ -171,6 +176,8 @@ export type StorageCheck = {
   message: string;
   /** Имена переменных с токеном, которые видит сервер. Значения не раскрываем. */
   tokenVariables: string[];
+  /** Все переменные, относящиеся к хранилищу, — на случай неожиданного имени. */
+  storageVariables: string[];
 };
 
 /**
@@ -188,6 +195,7 @@ export async function checkStorageAction(): Promise<StorageCheck> {
     kind: storage.kind,
     onVercel: Boolean(process.env.VERCEL),
     tokenVariables: blobTokenVariableNames(),
+    storageVariables: storageVariableNames(),
   };
 
   if (!base.tokenPresent && base.onVercel) {

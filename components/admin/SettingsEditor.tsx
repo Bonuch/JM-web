@@ -271,6 +271,14 @@ export function SettingsEditor({
                         : "не найдены"}
                     </span>
                   </p>
+                  <p className="text-muted">
+                    Все переменные хранилища:{" "}
+                    <span className="text-sand-dim">
+                      {storageCheck.storageVariables.length > 0
+                        ? storageCheck.storageVariables.join(", ")
+                        : "не найдены"}
+                    </span>
+                  </p>
                 </div>
               )}
             </div>

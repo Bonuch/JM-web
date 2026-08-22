@@ -21,3 +21,15 @@ export function getBlobToken(): string | undefined {
   const [name] = blobTokenVariableNames();
   return name ? process.env[name] : undefined;
 }
+
+/**
+ * Имена всех переменных, относящихся к хранилищу, — чтобы в админке было
+ * видно, что именно доходит до сервера, если токен назван неожиданно.
+ * Возвращаем только имена: значения — это секреты.
+ */
+export function storageVariableNames(): string[] {
+  return Object.keys(process.env)
+    .filter((name) => name.includes("BLOB") || name.includes("STORAGE"))
+    .filter((name) => Boolean(process.env[name]))
+    .sort();
+}

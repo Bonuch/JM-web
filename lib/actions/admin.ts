@@ -15,7 +15,7 @@ import {
   upsertProject,
 } from "@/lib/content";
 import { deleteLead, formatLeadMessage, markLeadRead, notifyTelegram } from "@/lib/leads";
-import { getStorage, isBlobConfigured } from "@/lib/storage";
+import { blobTokenVariableNames, getStorage, isBlobConfigured } from "@/lib/storage";
 import type { ImageAsset, Project, Settings } from "@/lib/types";
 
 /** Публичные страницы кэшируются, поэтому после каждой правки сбрасываем их. */
@@ -169,6 +169,8 @@ export type StorageCheck = {
   onVercel: boolean;
   ok: boolean;
   message: string;
+  /** Имена переменных с токеном, которые видит сервер. Значения не раскрываем. */
+  tokenVariables: string[];
 };
 
 /**
@@ -185,6 +187,7 @@ export async function checkStorageAction(): Promise<StorageCheck> {
     tokenPresent: isBlobConfigured(),
     kind: storage.kind,
     onVercel: Boolean(process.env.VERCEL),
+    tokenVariables: blobTokenVariableNames(),
   };
 
   if (!base.tokenPresent && base.onVercel) {
@@ -192,7 +195,7 @@ export async function checkStorageAction(): Promise<StorageCheck> {
       ...base,
       ok: false,
       message:
-        "Переменной BLOB_READ_WRITE_TOKEN нет в окружении. Хранилище создано, но не связано с этим проектом, либо после связывания не было повторного деплоя.",
+        "Токена хранилища нет в окружении. Проверьте в панели Vercel: Settings → Environment Variables. Если переменной BLOB_READ_WRITE_TOKEN там нет, хранилище связано не с этим проектом либо после связывания не было повторного деплоя.",
     };
   }
 

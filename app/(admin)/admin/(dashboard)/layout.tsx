@@ -63,6 +63,11 @@ export default async function DashboardLayout({ children }: { children: ReactNod
               <code className="text-sand">BLOB_READ_WRITE_TOKEN</code> появится сама — вручную её
               добавлять не нужно.
             </p>
+            <p className="mt-2 max-w-3xl text-sand-dim">
+              Если хранилище уже подключено, а сообщение осталось — откройте{" "}
+              <span className="text-sand">Настройки → Служебное → Проверить хранилище</span>: там
+              видно, какие переменные с токеном доходят до сервера.
+            </p>
           </div>
         </div>
       )}

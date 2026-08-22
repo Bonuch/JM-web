@@ -263,6 +263,14 @@ export function SettingsEditor({
                       {storageCheck.onVercel ? "Vercel" : "локальная"}
                     </span>
                   </p>
+                  <p className="text-muted">
+                    Переменные с токеном:{" "}
+                    <span className="text-sand-dim">
+                      {storageCheck.tokenVariables.length > 0
+                        ? storageCheck.tokenVariables.join(", ")
+                        : "не найдены"}
+                    </span>
+                  </p>
                 </div>
               )}
             </div>

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
 import { isAuthenticated } from "@/lib/auth";
+import { getBlobToken } from "@/lib/storage";
 
 /**
  * Выдаёт браузеру одноразовый токен, чтобы тот залил файл в Vercel Blob
@@ -24,6 +25,8 @@ export async function POST(request: Request) {
     const result = await handleUpload({
       body,
       request,
+      // имя переменной с токеном может быть с префиксом, поэтому передаём явно
+      token: getBlobToken(),
       onBeforeGenerateToken: async () => {
         // токен выдаём только администратору: кука приходит вместе с запросом
         if (!(await isAuthenticated())) {

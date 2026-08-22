@@ -1,5 +1,6 @@
 import { blobStorage } from "./blob";
 import { localStorage } from "./local";
+import { getBlobToken } from "./token";
 import type { StorageAdapter } from "./types";
 
 let cached: StorageAdapter | null = null;
@@ -16,7 +17,7 @@ export function getStorage(): StorageAdapter {
 }
 
 export function isBlobConfigured(): boolean {
-  return Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+  return Boolean(getBlobToken());
 }
 
 /**
@@ -29,4 +30,5 @@ export function isReadOnlyDeployment(): boolean {
   return Boolean(process.env.VERCEL) && !isBlobConfigured();
 }
 
+export { blobTokenVariableNames, getBlobToken } from "./token";
 export type { StorageAdapter, StoredFile } from "./types";

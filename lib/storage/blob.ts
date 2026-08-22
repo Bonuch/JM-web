@@ -1,4 +1,5 @@
 import { del, head, put } from "@vercel/blob";
+import { getBlobToken } from "./token";
 import type { StorageAdapter, StoredFile } from "./types";
 
 /**
@@ -11,7 +12,7 @@ import type { StorageAdapter, StoredFile } from "./types";
  */
 async function resolveUrl(pathname: string): Promise<string | null> {
   try {
-    const meta = await head(pathname);
+    const meta = await head(pathname, { token: getBlobToken() });
     return meta.url;
   } catch {
     return null;
@@ -40,6 +41,7 @@ export const blobStorage: StorageAdapter = {
   async writeText(pathname, value, contentType = "application/json") {
     await put(pathname, value, {
       access: "public",
+      token: getBlobToken(),
       contentType,
       addRandomSuffix: false,
       allowOverwrite: true,
@@ -50,6 +52,7 @@ export const blobStorage: StorageAdapter = {
   async writeBytes(pathname, value, contentType) {
     await put(pathname, value, {
       access: "public",
+      token: getBlobToken(),
       contentType,
       addRandomSuffix: false,
       allowOverwrite: true,
@@ -60,6 +63,7 @@ export const blobStorage: StorageAdapter = {
   async putFile(pathname, data, contentType): Promise<StoredFile> {
     const result = await put(pathname, data, {
       access: "public",
+      token: getBlobToken(),
       contentType,
       addRandomSuffix: false,
       allowOverwrite: true,
@@ -73,7 +77,7 @@ export const blobStorage: StorageAdapter = {
     if (urls.length === 0) return;
     try {
       // del принимает публичные URL напрямую
-      await del(urls);
+      await del(urls, { token: getBlobToken() });
     } catch {
       // не блокируем удаление проекта из-за осиротевшего файла
     }

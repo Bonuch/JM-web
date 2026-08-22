@@ -15,7 +15,7 @@ import {
   upsertProject,
 } from "@/lib/content";
 import { deleteLead, formatLeadMessage, markLeadRead, notifyTelegram } from "@/lib/leads";
-import { getStorage } from "@/lib/storage";
+import { getStorage, isBlobConfigured } from "@/lib/storage";
 import type { ImageAsset, Project, Settings } from "@/lib/types";
 
 /** Публичные страницы кэшируются, поэтому после каждой правки сбрасываем их. */
@@ -161,6 +161,71 @@ export async function deleteLeadAction(id: string): Promise<void> {
   await requireAdmin();
   await deleteLead(id);
   revalidatePath("/admin/leads");
+}
+
+export type StorageCheck = {
+  tokenPresent: boolean;
+  kind: "local" | "blob";
+  onVercel: boolean;
+  ok: boolean;
+  message: string;
+};
+
+/**
+ * Проверка хранилища «по-настоящему»: пробуем записать и прочитать файл.
+ * Наличия токена мало — стор может быть подключён не к тому проекту или не
+ * разрешать публичные файлы, и узнать об этом лучше здесь, чем на середине
+ * загрузки рендера.
+ */
+export async function checkStorageAction(): Promise<StorageCheck> {
+  await requireAdmin();
+
+  const storage = getStorage();
+  const base = {
+    tokenPresent: isBlobConfigured(),
+    kind: storage.kind,
+    onVercel: Boolean(process.env.VERCEL),
+  };
+
+  if (!base.tokenPresent && base.onVercel) {
+    return {
+      ...base,
+      ok: false,
+      message:
+        "Переменной BLOB_READ_WRITE_TOKEN нет в окружении. Хранилище создано, но не связано с этим проектом, либо после связывания не было повторного деплоя.",
+    };
+  }
+
+  const probePath = "content/.healthcheck";
+  const stamp = new Date().toISOString();
+
+  try {
+    await storage.writeText(probePath, stamp, "text/plain");
+    const readBack = await storage.readText(probePath);
+
+    if (readBack?.trim() !== stamp) {
+      return {
+        ...base,
+        ok: false,
+        message: "Файл записался, но прочитать его обратно не удалось — проверьте настройки стора.",
+      };
+    }
+
+    return {
+      ...base,
+      ok: true,
+      message:
+        storage.kind === "blob"
+          ? "Хранилище Vercel Blob работает: тестовый файл записан и прочитан."
+          : "Файлы сохраняются в папку проекта. Для локальной разработки это нормально.",
+    };
+  } catch (error) {
+    return {
+      ...base,
+      ok: false,
+      message: `Ошибка хранилища: ${error instanceof Error ? error.message : String(error)}`,
+    };
+  }
 }
 
 /** Проверка, что бот настроен и пишет в нужный чат. */

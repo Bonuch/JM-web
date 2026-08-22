@@ -2,7 +2,12 @@
 
 import { useState, useTransition } from "react";
 import { cn } from "@/lib/cn";
-import { saveSettingsAction, sendTestNotificationAction } from "@/lib/actions/admin";
+import {
+  checkStorageAction,
+  saveSettingsAction,
+  sendTestNotificationAction,
+  type StorageCheck,
+} from "@/lib/actions/admin";
 import type { FaqItem, ImageAsset, Localized, ServiceItem, Settings, StatItem } from "@/lib/types";
 import type { StorageKind } from "@/lib/image-processing";
 import { ImageUploader } from "./ImageUploader";
@@ -16,7 +21,7 @@ const TABS: { id: TabId; label: string }[] = [
   { id: "services", label: "Услуги и цены" },
   { id: "faq", label: "Вопросы" },
   { id: "stats", label: "Цифры" },
-  { id: "notifications", label: "Уведомления" },
+  { id: "notifications", label: "Служебное" },
 ];
 
 const emptyLocalized = (): Localized => ({ ru: "", en: "" });
@@ -35,6 +40,7 @@ export function SettingsEditor({
   const [pending, startTransition] = useTransition();
   const [saved, setSaved] = useState(false);
   const [testResult, setTestResult] = useState<string | null>(null);
+  const [storageCheck, setStorageCheck] = useState<StorageCheck | null>(null);
 
   const patch = <K extends keyof Settings>(key: K, value: Settings[K]) => {
     setSettings((current) => ({ ...current, [key]: value }));
@@ -215,6 +221,52 @@ export function SettingsEditor({
 
         {tab === "notifications" && (
           <div className="space-y-6">
+            <div className="border border-line bg-surface/30 p-6">
+              <p className="text-sm text-sand">Хранилище изображений</p>
+              <p className="mt-3 text-xs leading-relaxed text-muted">
+                Проверка записывает в хранилище небольшой служебный файл и читает его обратно.
+                Так сразу видно, подключено ли хранилище к этому проекту, — вместо того чтобы
+                выяснять это на середине загрузки рендера.
+              </p>
+
+              <button
+                type="button"
+                disabled={pending}
+                onClick={() =>
+                  startTransition(async () => {
+                    setStorageCheck(await checkStorageAction());
+                  })
+                }
+                className="mt-6 rounded-full border border-line-strong px-5 py-2.5 text-[11px] tracking-[0.12em] text-sand uppercase transition-colors hover:border-brass hover:text-brass disabled:opacity-40"
+              >
+                Проверить хранилище
+              </button>
+
+              {storageCheck && (
+                <div className="mt-5 space-y-2 border-t border-line pt-5 text-xs leading-relaxed">
+                  <p className={storageCheck.ok ? "text-brass" : "text-sand"}>
+                    {storageCheck.message}
+                  </p>
+                  <p className="text-muted">
+                    Активное хранилище:{" "}
+                    <span className="text-sand-dim">
+                      {storageCheck.kind === "blob" ? "Vercel Blob" : "папка проекта"}
+                    </span>
+                    {" · "}
+                    токен:{" "}
+                    <span className="text-sand-dim">
+                      {storageCheck.tokenPresent ? "виден" : "отсутствует"}
+                    </span>
+                    {" · "}
+                    среда:{" "}
+                    <span className="text-sand-dim">
+                      {storageCheck.onVercel ? "Vercel" : "локальная"}
+                    </span>
+                  </p>
+                </div>
+              )}
+            </div>
+
             <div className="border border-line bg-surface/30 p-6">
               <p className="text-sm text-sand">
                 Уведомления в Telegram:{" "}

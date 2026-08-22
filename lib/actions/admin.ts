@@ -23,6 +23,34 @@ import {
 } from "@/lib/storage";
 import type { ImageAsset, Project, Settings } from "@/lib/types";
 
+/**
+ * Результат действия админки.
+ *
+ * Любая правка пишет данные в хранилище, и если оно недоступно, исключение из
+ * серверного действия обрушивает страницу целиком — вместо интерфейса человек
+ * видит «A server error occurred». Поэтому действия не бросают ошибку, а
+ * возвращают её текст, и админка остаётся рабочей.
+ */
+export type ActionResult<T = undefined> =
+  | (T extends undefined ? { ok: true } : { ok: true; data: T })
+  | { ok: false; error: string };
+
+function describeFailure(error: unknown): string {
+  const message = error instanceof Error ? error.message : String(error);
+
+  if (message === "UNAUTHORIZED") {
+    return "Сессия истекла — войдите заново.";
+  }
+  // на Vercel диск доступен только для чтения: так выглядит запись без Blob
+  if (/EROFS|read-only|ENOENT|EACCES|EPERM/i.test(message)) {
+    return "Хранилище недоступно для записи. Проверьте, подключено ли к проекту Vercel Blob: Настройки → Служебное → Проверить хранилище.";
+  }
+  if (/token/i.test(message)) {
+    return `Хранилище не приняло запрос: ${message}`;
+  }
+  return `Не удалось сохранить: ${message}`;
+}
+
 /** Публичные страницы кэшируются, поэтому после каждой правки сбрасываем их. */
 function revalidateSite() {
   invalidateSiteCache();
@@ -57,115 +85,158 @@ function assetUrls(assets: (ImageAsset | null | undefined)[]): string[] {
     .filter(Boolean);
 }
 
-export async function saveProjectAction(input: Project): Promise<{ id: string; slug: string }> {
-  await requireAdmin();
+export async function saveProjectAction(
+  input: Project,
+): Promise<ActionResult<{ id: string; slug: string }>> {
+  try {
+    await requireAdmin();
 
-  const existing = await getProjectById(input.id);
-  const now = new Date().toISOString();
+    const existing = await getProjectById(input.id);
+    const now = new Date().toISOString();
 
-  const slugSource = input.slug.trim() || input.title.ru || input.title.en || "project";
-  const slug = await uniqueSlug(slugSource, input.id);
+    const slugSource = input.slug.trim() || input.title.ru || input.title.en || "project";
+    const slug = await uniqueSlug(slugSource, input.id);
 
-  const project: Project = {
-    ...input,
-    slug,
-    cover: input.cover ?? input.images[0] ?? null,
-    createdAt: existing?.createdAt ?? now,
-    updatedAt: now,
-  };
+    const project: Project = {
+      ...input,
+      slug,
+      cover: input.cover ?? input.images[0] ?? null,
+      createdAt: existing?.createdAt ?? now,
+      updatedAt: now,
+    };
 
-  // картинки, удалённые из проекта, чистим и в хранилище
-  if (existing) {
-    const keptUrls = new Set(assetUrls([project.cover, ...project.images]));
-    const orphaned = assetUrls([existing.cover, ...existing.images]).filter(
-      (url) => !keptUrls.has(url),
-    );
-    if (orphaned.length > 0) {
-      await getStorage().deleteFiles(orphaned);
+    // картинки, удалённые из проекта, чистим и в хранилище
+    if (existing) {
+      const keptUrls = new Set(assetUrls([project.cover, ...project.images]));
+      const orphaned = assetUrls([existing.cover, ...existing.images]).filter(
+        (url) => !keptUrls.has(url),
+      );
+      if (orphaned.length > 0) {
+        await getStorage().deleteFiles(orphaned);
+      }
     }
+
+    await upsertProject(project);
+    revalidateSite();
+
+    return { ok: true, data: { id: project.id, slug: project.slug } };
+  } catch (error) {
+    console.error("Не удалось сохранить проект", error);
+    return { ok: false, error: describeFailure(error) };
   }
-
-  await upsertProject(project);
-  revalidateSite();
-
-  return { id: project.id, slug: project.slug };
 }
 
-export async function deleteProjectAction(id: string): Promise<void> {
-  await requireAdmin();
-  const removed = await deleteProject(id);
-  if (removed) {
-    const urls = assetUrls([removed.cover, ...removed.images]);
-    if (urls.length > 0) await getStorage().deleteFiles(urls);
+export async function deleteProjectAction(id: string): Promise<ActionResult> {
+  try {
+    await requireAdmin();
+    const removed = await deleteProject(id);
+    if (removed) {
+      const urls = assetUrls([removed.cover, ...removed.images]);
+      if (urls.length > 0) await getStorage().deleteFiles(urls);
+    }
+    revalidateSite();
+    return { ok: true };
+  } catch (error) {
+    console.error("Не удалось удалить проект", error);
+    return { ok: false, error: describeFailure(error) };
   }
-  revalidateSite();
 }
 
-export async function togglePublishedAction(id: string): Promise<void> {
-  await requireAdmin();
-  const project = await getProjectById(id);
-  if (!project) return;
-  await upsertProject({
-    ...project,
-    published: !project.published,
-    updatedAt: new Date().toISOString(),
-  });
-  revalidateSite();
+async function toggleFlag(id: string, flag: "published" | "featured"): Promise<ActionResult> {
+  try {
+    await requireAdmin();
+    const project = await getProjectById(id);
+    if (!project) return { ok: false, error: "Проект не найден." };
+
+    await upsertProject({
+      ...project,
+      [flag]: !project[flag],
+      updatedAt: new Date().toISOString(),
+    });
+    revalidateSite();
+    return { ok: true };
+  } catch (error) {
+    console.error("Не удалось изменить статус проекта", error);
+    return { ok: false, error: describeFailure(error) };
+  }
 }
 
-export async function toggleFeaturedAction(id: string): Promise<void> {
-  await requireAdmin();
-  const project = await getProjectById(id);
-  if (!project) return;
-  await upsertProject({
-    ...project,
-    featured: !project.featured,
-    updatedAt: new Date().toISOString(),
-  });
-  revalidateSite();
+export async function togglePublishedAction(id: string): Promise<ActionResult> {
+  return toggleFlag(id, "published");
+}
+
+export async function toggleFeaturedAction(id: string): Promise<ActionResult> {
+  return toggleFlag(id, "featured");
 }
 
 /** Перемещение проекта на одну позицию вверх или вниз по списку. */
-export async function moveProjectAction(id: string, direction: "up" | "down"): Promise<void> {
-  await requireAdmin();
-  const projects = await getAllProjects();
-  const index = projects.findIndex((project) => project.id === id);
-  if (index === -1) return;
+export async function moveProjectAction(
+  id: string,
+  direction: "up" | "down",
+): Promise<ActionResult> {
+  try {
+    await requireAdmin();
+    const projects = await getAllProjects();
+    const index = projects.findIndex((project) => project.id === id);
+    if (index === -1) return { ok: false, error: "Проект не найден." };
 
-  const target = direction === "up" ? index - 1 : index + 1;
-  if (target < 0 || target >= projects.length) return;
+    const target = direction === "up" ? index - 1 : index + 1;
+    if (target < 0 || target >= projects.length) return { ok: true };
 
-  const ordered = [...projects];
-  [ordered[index], ordered[target]] = [ordered[target], ordered[index]];
+    const ordered = [...projects];
+    [ordered[index], ordered[target]] = [ordered[target], ordered[index]];
 
-  await reorderProjects(ordered.map((project) => project.id));
-  revalidateSite();
-}
-
-export async function saveSettingsAction(settings: Settings): Promise<void> {
-  await requireAdmin();
-
-  // если из настроек убрали hero-изображение, удаляем и файл
-  const current = await getSiteData();
-  const previousHero = current.settings.heroImage;
-  if (previousHero && previousHero.id !== settings.heroImage?.id) {
-    await getStorage().deleteFiles(assetUrls([previousHero]));
+    await reorderProjects(ordered.map((project) => project.id));
+    revalidateSite();
+    return { ok: true };
+  } catch (error) {
+    console.error("Не удалось изменить порядок проектов", error);
+    return { ok: false, error: describeFailure(error) };
   }
-
-  await saveSettings(settings);
-  revalidateSite();
 }
 
-export async function setLeadReadAction(id: string, read: boolean): Promise<void> {
-  await requireAdmin();
-  await markLeadRead(id, read);
-  revalidatePath("/admin/leads");
+export async function saveSettingsAction(settings: Settings): Promise<ActionResult> {
+  try {
+    await requireAdmin();
+
+    // если из настроек убрали hero-изображение, удаляем и файл
+    const current = await getSiteData();
+    const previousHero = current.settings.heroImage;
+    if (previousHero && previousHero.id !== settings.heroImage?.id) {
+      await getStorage().deleteFiles(assetUrls([previousHero]));
+    }
+
+    await saveSettings(settings);
+    revalidateSite();
+    return { ok: true };
+  } catch (error) {
+    console.error("Не удалось сохранить настройки", error);
+    return { ok: false, error: describeFailure(error) };
+  }
 }
 
-export async function deleteLeadAction(id: string): Promise<void> {
-  await requireAdmin();
-  await deleteLead(id);
-  revalidatePath("/admin/leads");
+export async function setLeadReadAction(id: string, read: boolean): Promise<ActionResult> {
+  try {
+    await requireAdmin();
+    await markLeadRead(id, read);
+    revalidatePath("/admin/leads");
+    return { ok: true };
+  } catch (error) {
+    console.error("Не удалось обновить заявку", error);
+    return { ok: false, error: describeFailure(error) };
+  }
+}
+
+export async function deleteLeadAction(id: string): Promise<ActionResult> {
+  try {
+    await requireAdmin();
+    await deleteLead(id);
+    revalidatePath("/admin/leads");
+    return { ok: true };
+  } catch (error) {
+    console.error("Не удалось удалить заявку", error);
+    return { ok: false, error: describeFailure(error) };
+  }
 }
 
 export type StorageCheck = {

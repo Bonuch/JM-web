@@ -41,6 +41,7 @@ export function SettingsEditor({
   const [saved, setSaved] = useState(false);
   const [testResult, setTestResult] = useState<string | null>(null);
   const [storageCheck, setStorageCheck] = useState<StorageCheck | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   const patch = <K extends keyof Settings>(key: K, value: Settings[K]) => {
     setSettings((current) => ({ ...current, [key]: value }));
@@ -49,8 +50,10 @@ export function SettingsEditor({
 
   const save = () => {
     startTransition(async () => {
-      await saveSettingsAction(settings);
-      setSaved(true);
+      setSaveError(null);
+      const result = await saveSettingsAction(settings);
+      if (result.ok) setSaved(true);
+      else setSaveError(result.error);
     });
   };
 
@@ -65,7 +68,7 @@ export function SettingsEditor({
         </div>
 
         <div className="flex items-center gap-4">
-          {saved && !pending && <span className="text-xs text-brass">Сохранено</span>}
+          {saved && !pending && !saveError && <span className="text-xs text-brass">Сохранено</span>}
           <button
             type="button"
             onClick={save}
@@ -76,6 +79,12 @@ export function SettingsEditor({
           </button>
         </div>
       </div>
+
+      {saveError && (
+        <p className="mt-6 border border-brass/30 bg-brass/10 p-4 text-xs leading-relaxed text-sand">
+          {saveError}
+        </p>
+      )}
 
       <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 border-b border-line pb-4">
         {TABS.map((item) => (

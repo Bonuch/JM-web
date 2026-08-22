@@ -47,9 +47,19 @@ export function ProjectEditor({
       try {
         const next = publish === undefined ? project : { ...project, published: publish };
         const result = await saveProjectAction(next);
+
+        if (!result.ok) {
+          setError(result.error);
+          return;
+        }
+
         setSaved(true);
-        setProject((current) => ({ ...current, slug: result.slug, published: next.published }));
-        if (isNew) router.replace(`/admin/projects/${result.id}`);
+        setProject((current) => ({
+          ...current,
+          slug: result.data.slug,
+          published: next.published,
+        }));
+        if (isNew) router.replace(`/admin/projects/${result.data.id}`);
         router.refresh();
       } catch {
         setError("Не удалось сохранить. Проверьте соединение и попробуйте ещё раз.");
@@ -238,7 +248,12 @@ export function ProjectEditor({
                       type="button"
                       onClick={() =>
                         startTransition(async () => {
-                          await deleteProjectAction(project.id);
+                          const result = await deleteProjectAction(project.id);
+                          if (!result.ok) {
+                            setError(result.error);
+                            setConfirmingDelete(false);
+                            return;
+                          }
                           router.push("/admin");
                         })
                       }

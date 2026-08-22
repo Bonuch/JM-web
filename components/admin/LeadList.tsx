@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { cn } from "@/lib/cn";
-import { deleteLeadAction, setLeadReadAction } from "@/lib/actions/admin";
+import { deleteLeadAction, setLeadReadAction, type ActionResult } from "@/lib/actions/admin";
 import type { Lead } from "@/lib/types";
 
 const dateFormatter = new Intl.DateTimeFormat("ru-RU", {
@@ -25,9 +25,24 @@ function contactHref(contact: string): string | null {
 export function LeadList({ leads }: { leads: Lead[] }) {
   const [pending, startTransition] = useTransition();
   const [openId, setOpenId] = useState<string | null>(leads.find((lead) => !lead.read)?.id ?? null);
+  const [error, setError] = useState<string | null>(null);
+
+  /** Действия возвращают причину сбоя вместо исключения — показываем её. */
+  const run = (action: () => Promise<ActionResult>) =>
+    startTransition(async () => {
+      setError(null);
+      const result = await action();
+      if (!result.ok) setError(result.error);
+    });
 
   return (
     <div className={cn("mt-8 border-t border-line", pending && "opacity-60")}>
+      {error && (
+        <p className="border-b border-brass/30 bg-brass/10 px-4 py-3 text-xs leading-relaxed text-sand">
+          {error}
+        </p>
+      )}
+
       {leads.map((lead) => {
         const open = openId === lead.id;
         const href = contactHref(lead.contact);
@@ -38,7 +53,7 @@ export function LeadList({ leads }: { leads: Lead[] }) {
               type="button"
               onClick={() => {
                 setOpenId(open ? null : lead.id);
-                if (!lead.read) startTransition(() => setLeadReadAction(lead.id, true));
+                if (!lead.read) run(() => setLeadReadAction(lead.id, true));
               }}
               className="flex w-full items-center gap-4 py-5 text-left"
             >
@@ -86,14 +101,14 @@ export function LeadList({ leads }: { leads: Lead[] }) {
                   )}
                   <button
                     type="button"
-                    onClick={() => startTransition(() => setLeadReadAction(lead.id, !lead.read))}
+                    onClick={() => run(() => setLeadReadAction(lead.id, !lead.read))}
                     className="rounded-full border border-line px-4 py-2 text-[10px] tracking-[0.12em] text-muted uppercase transition-colors hover:border-brass hover:text-brass"
                   >
                     {lead.read ? "Пометить новой" : "Пометить прочитанной"}
                   </button>
                   <button
                     type="button"
-                    onClick={() => startTransition(() => deleteLeadAction(lead.id))}
+                    onClick={() => run(() => deleteLeadAction(lead.id))}
                     className="text-[10px] tracking-[0.12em] text-muted uppercase transition-colors hover:text-brass"
                   >
                     Удалить

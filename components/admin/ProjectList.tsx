@@ -9,6 +9,7 @@ import {
   moveProjectAction,
   toggleFeaturedAction,
   togglePublishedAction,
+  type ActionResult,
 } from "@/lib/actions/admin";
 import type { Project } from "@/lib/types";
 
@@ -22,9 +23,25 @@ const CATEGORY_LABELS: Record<Project["category"], string> = {
 export function ProjectList({ projects }: { projects: Project[] }) {
   const [pending, startTransition] = useTransition();
   const [confirmingId, setConfirmingId] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  /** Действия админки возвращают причину сбоя вместо исключения — показываем её. */
+  const run = (action: () => Promise<ActionResult>, onSuccess?: () => void) =>
+    startTransition(async () => {
+      setError(null);
+      const result = await action();
+      if (result.ok) onSuccess?.();
+      else setError(result.error);
+    });
 
   return (
     <div className={cn("mt-10 border-t border-line", pending && "opacity-60")}>
+      {error && (
+        <p className="border-b border-brass/30 bg-brass/10 px-4 py-3 text-xs leading-relaxed text-sand">
+          {error}
+        </p>
+      )}
+
       {projects.map((project, index) => (
         <div
           key={project.id}
@@ -66,13 +83,13 @@ export function ProjectList({ projects }: { projects: Project[] }) {
               active={project.published}
               activeLabel="Опубликован"
               inactiveLabel="Черновик"
-              onClick={() => startTransition(() => togglePublishedAction(project.id))}
+              onClick={() => run(() => togglePublishedAction(project.id))}
             />
             <StatusButton
               active={project.featured}
               activeLabel="В избранном"
               inactiveLabel="Не в избранном"
-              onClick={() => startTransition(() => toggleFeaturedAction(project.id))}
+              onClick={() => run(() => toggleFeaturedAction(project.id))}
             />
           </div>
 
@@ -80,14 +97,14 @@ export function ProjectList({ projects }: { projects: Project[] }) {
             <IconButton
               label="Выше"
               disabled={index === 0}
-              onClick={() => startTransition(() => moveProjectAction(project.id, "up"))}
+              onClick={() => run(() => moveProjectAction(project.id, "up"))}
             >
               ↑
             </IconButton>
             <IconButton
               label="Ниже"
               disabled={index === projects.length - 1}
-              onClick={() => startTransition(() => moveProjectAction(project.id, "down"))}
+              onClick={() => run(() => moveProjectAction(project.id, "down"))}
             >
               ↓
             </IconButton>
@@ -98,10 +115,10 @@ export function ProjectList({ projects }: { projects: Project[] }) {
               <button
                 type="button"
                 onClick={() =>
-                  startTransition(async () => {
-                    await deleteProjectAction(project.id);
-                    setConfirmingId(null);
-                  })
+                  run(
+                    () => deleteProjectAction(project.id),
+                    () => setConfirmingId(null),
+                  )
                 }
                 className="rounded-full bg-brass px-4 py-2 text-[10px] tracking-[0.12em] text-ink uppercase"
               >

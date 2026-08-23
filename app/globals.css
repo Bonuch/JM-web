@@ -2,8 +2,9 @@
 
 /* ------------------------------------------------------------------ *
  *  Дизайн-токены
- *  Тёмная тёплая база: рендеры интерьеров на ней читаются как в галерее,
- *  а латунный акцент отвечает за «премиальность» без золотого китча.
+ *  Тёмная тёплая база: рендеры интерьеров на ней читаются как в галерее.
+ *  Палитра монохромная: акцент берётся не цветом, а яркостью — приглушённый,
+ *  песочный, светлый. Цвет на странице приносят только сами рендеры.
  * ------------------------------------------------------------------ */
 @theme {
   --color-ink: #0a0a0b;
@@ -13,8 +14,7 @@
   --color-sand: #ede7de;
   --color-sand-dim: #a8a198;
   --color-muted: #6f6a64;
-  --color-brass: #c2a36b;
-  --color-brass-soft: #8a754b;
+  --color-accent: #faf7f1;
   --color-line: rgba(237, 231, 222, 0.1);
   --color-line-strong: rgba(237, 231, 222, 0.22);
 
@@ -75,12 +75,12 @@
   }
 
   ::selection {
-    background-color: var(--color-brass);
+    background-color: var(--color-accent);
     color: var(--color-ink);
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-brass);
+    outline: 2px solid var(--color-accent);
     outline-offset: 3px;
     border-radius: 2px;
   }
@@ -135,12 +135,13 @@ html.lenis body {
   max-width: 64rem;
 }
 
-/* Надзаголовок секции: мелкий трекинговый капслок */
+/* Надзаголовок секции: мелкий трекинговый капслок. Приглушён намеренно —
+   яркость на странице отдана заголовку, а не подписи над ним. */
 @utility eyebrow {
   font-size: 0.6875rem;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--color-brass);
+  color: var(--color-sand-dim);
   font-weight: 500;
 }
 
@@ -172,6 +173,16 @@ html.lenis body {
   font-size: clamp(1.6rem, 3.2vw, 2.6rem);
   line-height: 1.1;
   letter-spacing: -0.03em;
+}
+
+/* Пункт мобильного меню. Отдельный кегль, а не display-lg: в бургере это
+   единственная навигация, и она должна забирать экран целиком. */
+@utility menu-link {
+  font-family: var(--font-display);
+  font-weight: 275;
+  font-size: clamp(2.1rem, 11.5vw, 3.25rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
 }
 
 /* Логотип в шапке и подвале: плотный трекинг вместо засечек */
@@ -221,6 +232,147 @@ html.lenis body {
 
   &:hover {
     background-size: 100% 1px;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ *  Кнопки
+ *  Не плоская плашка, а накладка: свет ложится сверху, снизу остаётся
+ *  тень. При наведении накладка целиком меняет материал.
+ * ------------------------------------------------------------------ */
+@layer components {
+  .btn {
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    overflow: hidden;
+    border-radius: 9999px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition:
+      transform 0.6s var(--ease-out-expo),
+      box-shadow 0.6s var(--ease-out-expo),
+      border-color 0.4s var(--ease-out-expo),
+      color 0.32s var(--ease-out-expo) 0.06s;
+  }
+
+  /* Вторая накладка лежит поверх первой и проявляется целиком — так смена
+     материала читается как перемена света, а не как заливка по краю. */
+  .btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.45s var(--ease-out-expo);
+  }
+
+  .btn > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Заливка «сама собой» не включается на тач-экранах: там :hover залипает
+     после тапа, и кнопка так и остаётся закрашенной. */
+  @media (hover: hover) and (pointer: fine) {
+    .btn:hover::before {
+      opacity: 1;
+    }
+  }
+
+  .btn:active {
+    transform: scale(0.985);
+    transition-duration: 0.14s;
+  }
+
+  .btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .btn:disabled::before {
+    display: none;
+  }
+
+  /* --- Основная кнопка: песчаная накладка, латунь при наведении --- */
+  .btn-solid {
+    color: var(--color-ink);
+    background-image: linear-gradient(180deg, #fdfbf7 0%, var(--color-sand) 46%, #dbd1c1 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      inset 0 -1px 0 rgba(52, 41, 26, 0.16),
+      0 1px 1px rgba(0, 0, 0, 0.45),
+      0 16px 30px -18px rgba(0, 0, 0, 0.9);
+  }
+
+  /* Наведение переворачивает кнопку: светлая накладка сменяется графитовой,
+     текст — песочным. Кольцо по контуру не даёт плите утонуть в фоне. */
+  .btn-solid::before {
+    background-image: linear-gradient(180deg, #2e2e35 0%, #202026 48%, #141418 100%);
+    box-shadow:
+      inset 0 0 0 1px rgba(237, 231, 222, 0.28),
+      inset 0 1px 0 rgba(237, 231, 222, 0.12);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .btn-solid:hover {
+      color: var(--color-sand);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0),
+        inset 0 -1px 0 rgba(52, 41, 26, 0),
+        0 1px 1px rgba(0, 0, 0, 0.35),
+        0 14px 26px -16px rgba(0, 0, 0, 0.85);
+    }
+  }
+
+  /* --- Вторичная: тонкая рамка, заливается песком --- */
+  .btn-outline {
+    color: var(--color-sand);
+    border: 1px solid var(--color-line-strong);
+    background-image: linear-gradient(180deg, rgba(237, 231, 222, 0.08), rgba(237, 231, 222, 0));
+    box-shadow:
+      inset 0 1px 0 rgba(237, 231, 222, 0.12),
+      0 10px 24px -18px rgba(0, 0, 0, 0.9);
+  }
+
+  .btn-outline::before {
+    background-image: linear-gradient(180deg, #fdfbf7 0%, var(--color-sand) 46%, #dbd1c1 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      inset 0 -1px 0 rgba(52, 41, 26, 0.16);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .btn-outline:hover {
+      color: var(--color-ink);
+      border-color: rgba(237, 231, 222, 0.55);
+      box-shadow:
+        inset 0 1px 0 rgba(237, 231, 222, 0.12),
+        0 22px 40px -20px rgba(0, 0, 0, 0.95);
+    }
+  }
+
+  /* --- Текстовая: ни плиты, ни подъёма --- */
+  .btn-ghost {
+    color: var(--color-sand);
+  }
+
+  .btn-ghost::before {
+    display: none;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .btn-ghost:hover {
+      color: var(--color-accent);
+    }
   }
 }
 

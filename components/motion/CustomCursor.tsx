@@ -82,8 +82,8 @@ export function CustomCursor() {
             width: size,
             height: size,
             opacity: visible ? 1 : 0,
-            backgroundColor: label ? "rgba(194,163,107,0.95)" : "rgba(237,231,222,0)",
-            borderColor: label ? "rgba(194,163,107,0)" : "rgba(237,231,222,0.55)",
+            backgroundColor: label ? "rgba(250,247,241,0.95)" : "rgba(237,231,222,0)",
+            borderColor: label ? "rgba(250,247,241,0)" : "rgba(237,231,222,0.55)",
           }}
           transition={{ type: "spring", stiffness: 250, damping: 25, mass: 0.4 }}
           initial={false}

@@ -5,7 +5,7 @@ import { cn } from "@/lib/cn";
 import type { Localized } from "@/lib/types";
 
 const inputClass =
-  "w-full border border-line bg-surface/40 px-4 py-3 text-sm text-sand transition-colors placeholder:text-muted/60 focus:border-brass focus:outline-none";
+  "w-full border border-line bg-surface/40 px-4 py-3 text-sm text-sand transition-colors placeholder:text-muted/60 focus:border-accent focus:outline-none";
 
 export function Label({ children, hint }: { children: ReactNode; hint?: string }) {
   return (
@@ -119,7 +119,7 @@ export function LocalizedField({
               onClick={() => setLang(item)}
               className={cn(
                 "rounded-full px-2.5 py-1 text-[10px] tracking-[0.12em] uppercase transition-colors",
-                lang === item ? "bg-brass/15 text-brass" : "text-muted hover:text-sand",
+                lang === item ? "bg-accent/15 text-accent" : "text-muted hover:text-sand",
                 !value[item].trim() && "opacity-50",
               )}
             >
@@ -174,7 +174,7 @@ export function Toggle({
       <span
         className={cn(
           "mt-0.5 flex h-5 w-9 shrink-0 items-center rounded-full p-0.5 transition-colors",
-          checked ? "bg-brass" : "bg-surface-2",
+          checked ? "bg-accent" : "bg-surface-2",
         )}
       >
         <span

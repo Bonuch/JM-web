@@ -190,11 +190,11 @@ function NeighbourLink({
       }`}
     >
       <span className="flex items-center gap-3 text-[11px] tracking-[0.2em] text-muted uppercase">
-        {align === "left" && <ArrowRight className="rotate-180 group-hover:-translate-x-1" />}
+        {align === "left" && <ArrowRight className="rotate-180" />}
         {label}
         {align === "right" && <ArrowRight />}
       </span>
-      <span className="display-md text-sand transition-colors duration-500 group-hover:text-brass">
+      <span className="display-md text-sand transition-colors duration-500 group-hover:text-accent">
         {title}
       </span>
     </Link>

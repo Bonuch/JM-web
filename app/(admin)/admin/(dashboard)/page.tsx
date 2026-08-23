@@ -24,7 +24,7 @@ export default async function AdminProjectsPage() {
 
         <Link
           href="/admin/projects/new"
-          className="rounded-full bg-sand px-6 py-3 text-xs font-medium tracking-[0.1em] text-ink uppercase transition-colors hover:bg-brass"
+          className="rounded-full bg-sand px-6 py-3 text-xs font-medium tracking-[0.1em] text-ink uppercase transition-colors hover:bg-accent"
         >
           Добавить проект
         </Link>
@@ -39,7 +39,7 @@ export default async function AdminProjectsPage() {
           </p>
           <Link
             href="/admin/projects/new"
-            className="mt-8 inline-block rounded-full border border-line-strong px-6 py-3 text-xs tracking-[0.1em] text-sand uppercase transition-colors hover:border-brass hover:text-brass"
+            className="mt-8 inline-block rounded-full border border-line-strong px-6 py-3 text-xs tracking-[0.1em] text-sand uppercase transition-colors hover:border-accent hover:text-accent"
           >
             Создать проект
           </Link>

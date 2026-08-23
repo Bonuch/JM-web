@@ -71,7 +71,7 @@ export function ProjectEditor({
     <div className="pb-24">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <Link href="/admin" className="text-[11px] tracking-[0.16em] text-muted uppercase hover:text-brass">
+          <Link href="/admin" className="text-[11px] tracking-[0.16em] text-muted uppercase hover:text-accent">
             ← Все проекты
           </Link>
           <h1 className="mt-3 font-display text-4xl text-sand">
@@ -89,7 +89,7 @@ export function ProjectEditor({
             <Link
               href={`/ru/portfolio/${project.slug}`}
               target="_blank"
-              className="text-[11px] tracking-[0.16em] text-sand-dim uppercase hover:text-brass"
+              className="text-[11px] tracking-[0.16em] text-sand-dim uppercase hover:text-accent"
             >
               Посмотреть на сайте
             </Link>
@@ -211,15 +211,15 @@ export function ProjectEditor({
             </p>
           )}
 
-          {error && <p className="text-xs text-brass">{error}</p>}
-          {saved && !pending && <p className="text-xs text-brass">Сохранено</p>}
+          {error && <p className="text-xs text-accent">{error}</p>}
+          {saved && !pending && <p className="text-xs text-accent">Сохранено</p>}
 
           <div className="space-y-3">
             <button
               type="button"
               disabled={!canSave || pending}
               onClick={() => save()}
-              className="w-full rounded-full bg-sand px-6 py-3.5 text-xs font-medium tracking-[0.1em] text-ink uppercase transition-colors hover:bg-brass disabled:opacity-40"
+              className="w-full rounded-full bg-sand px-6 py-3.5 text-xs font-medium tracking-[0.1em] text-ink uppercase transition-colors hover:bg-accent disabled:opacity-40"
             >
               {pending ? "Сохраняем…" : "Сохранить"}
             </button>
@@ -229,7 +229,7 @@ export function ProjectEditor({
                 type="button"
                 disabled={!canSave || pending}
                 onClick={() => save(true)}
-                className="w-full rounded-full border border-line-strong px-6 py-3.5 text-xs tracking-[0.1em] text-sand uppercase transition-colors hover:border-brass hover:text-brass disabled:opacity-40"
+                className="w-full rounded-full border border-line-strong px-6 py-3.5 text-xs tracking-[0.1em] text-sand uppercase transition-colors hover:border-accent hover:text-accent disabled:opacity-40"
               >
                 Сохранить и опубликовать
               </button>
@@ -237,7 +237,7 @@ export function ProjectEditor({
           </div>
 
           {!isNew && (
-            <div className={cn("border-t border-line pt-6", confirmingDelete && "text-brass")}>
+            <div className={cn("border-t border-line pt-6", confirmingDelete && "text-accent")}>
               {confirmingDelete ? (
                 <div className="space-y-3">
                   <p className="text-xs leading-relaxed text-muted">
@@ -257,7 +257,7 @@ export function ProjectEditor({
                           router.push("/admin");
                         })
                       }
-                      className="rounded-full bg-brass px-5 py-2.5 text-[10px] tracking-[0.12em] text-ink uppercase"
+                      className="rounded-full bg-accent px-5 py-2.5 text-[10px] tracking-[0.12em] text-ink uppercase"
                     >
                       Удалить
                     </button>
@@ -274,7 +274,7 @@ export function ProjectEditor({
                 <button
                   type="button"
                   onClick={() => setConfirmingDelete(true)}
-                  className="text-[10px] tracking-[0.12em] text-muted uppercase transition-colors hover:text-brass"
+                  className="text-[10px] tracking-[0.12em] text-muted uppercase transition-colors hover:text-accent"
                 >
                   Удалить проект
                 </button>

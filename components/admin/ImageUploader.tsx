@@ -128,7 +128,7 @@ export function ImageUploader({
         }}
         className={cn(
           "border border-dashed px-6 py-10 text-center transition-colors",
-          dragging ? "border-brass bg-brass/5" : "border-line bg-surface/20",
+          dragging ? "border-accent bg-accent/5" : "border-line bg-surface/20",
         )}
       >
         <p className="text-sm text-sand">
@@ -142,7 +142,7 @@ export function ImageUploader({
           type="button"
           onClick={() => inputRef.current?.click()}
           disabled={uploading}
-          className="mt-5 rounded-full border border-line-strong px-5 py-2.5 text-[11px] tracking-[0.12em] text-sand uppercase transition-colors hover:border-brass hover:text-brass disabled:opacity-50"
+          className="mt-5 rounded-full border border-line-strong px-5 py-2.5 text-[11px] tracking-[0.12em] text-sand uppercase transition-colors hover:border-accent hover:text-accent disabled:opacity-50"
         >
           {progressLabel}
         </button>
@@ -150,7 +150,7 @@ export function ImageUploader({
         {uploading && (
           <div className="mx-auto mt-5 h-px w-full max-w-sm bg-line">
             <div
-              className="h-px bg-brass transition-[width] duration-300"
+              className="h-px bg-accent transition-[width] duration-300"
               style={{ width: `${Math.round(state.ratio * 100)}%` }}
             />
           </div>
@@ -169,7 +169,7 @@ export function ImageUploader({
         />
       </div>
 
-      {state.error && <p className="mt-3 text-xs text-brass">{state.error}</p>}
+      {state.error && <p className="mt-3 text-xs text-accent">{state.error}</p>}
 
       {images.length > 0 && (
         <div className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
@@ -187,7 +187,7 @@ export function ImageUploader({
                     unoptimized
                   />
                   {isCover && (
-                    <span className="absolute top-2 left-2 rounded-full bg-brass px-2 py-1 text-[9px] tracking-[0.12em] text-ink uppercase">
+                    <span className="absolute top-2 left-2 rounded-full bg-accent px-2 py-1 text-[9px] tracking-[0.12em] text-ink uppercase">
                       Обложка
                     </span>
                   )}
@@ -235,7 +235,7 @@ export function ImageUploader({
                       ),
                     )
                   }
-                  className="mt-2 w-full border-b border-line bg-transparent py-1.5 text-xs text-sand placeholder:text-muted/60 focus:border-brass focus:outline-none"
+                  className="mt-2 w-full border-b border-line bg-transparent py-1.5 text-xs text-sand placeholder:text-muted/60 focus:border-accent focus:outline-none"
                 />
               </div>
             );
@@ -260,7 +260,7 @@ function MiniButton({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="rounded-full border border-line px-2.5 py-1 text-[10px] text-muted transition-colors hover:border-brass hover:text-brass disabled:opacity-30 disabled:hover:border-line disabled:hover:text-muted"
+      className="rounded-full border border-line px-2.5 py-1 text-[10px] text-muted transition-colors hover:border-accent hover:text-accent disabled:opacity-30 disabled:hover:border-line disabled:hover:text-muted"
     >
       {children}
     </button>

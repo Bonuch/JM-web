@@ -37,7 +37,7 @@ export function ProjectList({ projects }: { projects: Project[] }) {
   return (
     <div className={cn("mt-10 border-t border-line", pending && "opacity-60")}>
       {error && (
-        <p className="border-b border-brass/30 bg-brass/10 px-4 py-3 text-xs leading-relaxed text-sand">
+        <p className="border-b border-accent/30 bg-accent/10 px-4 py-3 text-xs leading-relaxed text-sand">
           {error}
         </p>
       )}
@@ -67,7 +67,7 @@ export function ProjectList({ projects }: { projects: Project[] }) {
           <div className="min-w-48 flex-1">
             <Link
               href={`/admin/projects/${project.id}`}
-              className="font-display text-xl text-sand transition-colors hover:text-brass"
+              className="font-display text-xl text-sand transition-colors hover:text-accent"
             >
               {project.title.ru || project.title.en || "Без названия"}
             </Link>
@@ -120,7 +120,7 @@ export function ProjectList({ projects }: { projects: Project[] }) {
                     () => setConfirmingId(null),
                   )
                 }
-                className="rounded-full bg-brass px-4 py-2 text-[10px] tracking-[0.12em] text-ink uppercase"
+                className="rounded-full bg-accent px-4 py-2 text-[10px] tracking-[0.12em] text-ink uppercase"
               >
                 Удалить
               </button>
@@ -136,7 +136,7 @@ export function ProjectList({ projects }: { projects: Project[] }) {
             <button
               type="button"
               onClick={() => setConfirmingId(project.id)}
-              className="text-[10px] tracking-[0.12em] text-muted uppercase transition-colors hover:text-brass"
+              className="text-[10px] tracking-[0.12em] text-muted uppercase transition-colors hover:text-accent"
             >
               Удалить
             </button>
@@ -165,7 +165,7 @@ function StatusButton({
       className={cn(
         "rounded-full border px-3 py-1.5 text-[10px] tracking-[0.12em] uppercase transition-colors",
         active
-          ? "border-brass/50 bg-brass/10 text-brass"
+          ? "border-accent/50 bg-accent/10 text-accent"
           : "border-line text-muted hover:border-line-strong hover:text-sand",
       )}
     >
@@ -192,7 +192,7 @@ function IconButton({
       title={label}
       disabled={disabled}
       onClick={onClick}
-      className="flex h-8 w-8 items-center justify-center rounded-full border border-line text-sand-dim transition-colors hover:border-brass hover:text-brass disabled:opacity-30 disabled:hover:border-line disabled:hover:text-sand-dim"
+      className="flex h-8 w-8 items-center justify-center rounded-full border border-line text-sand-dim transition-colors hover:border-accent hover:text-accent disabled:opacity-30 disabled:hover:border-line disabled:hover:text-sand-dim"
     >
       {children}
     </button>

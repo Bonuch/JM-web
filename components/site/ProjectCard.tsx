@@ -51,7 +51,7 @@ export function ProjectCard({
 
         <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-5 md:p-7">
           <div className="translate-y-2 opacity-0 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-y-0 group-hover:opacity-100">
-            <span className="text-[10px] tracking-[0.22em] text-brass uppercase">
+            <span className="text-[10px] tracking-[0.22em] text-accent uppercase">
               {dict.categories[project.category]}
             </span>
           </div>
@@ -64,7 +64,7 @@ export function ProjectCard({
       </div>
 
       <div className="mt-5 flex items-baseline justify-between gap-6">
-        <h3 className="font-display text-2xl leading-tight text-sand transition-colors duration-500 group-hover:text-brass md:text-3xl">
+        <h3 className="font-display text-2xl leading-tight text-sand transition-colors duration-500 group-hover:text-accent md:text-3xl">
           {t(project.title, locale)}
         </h3>
         <span className="shrink-0 text-[11px] tracking-[0.16em] text-muted uppercase">

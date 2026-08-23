@@ -11,7 +11,9 @@
     "migrate:blob": "node --env-file-if-exists=.env.local scripts/migrate-to-blob.mjs"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "@vercel/blob": "^2.8.0",
+    "@vercel/speed-insights": "^2.0.0",
     "clsx": "^2.1.1",
     "jose": "^6.2.10",
     "lenis": "^1.3.26",

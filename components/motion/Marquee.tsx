@@ -46,7 +46,7 @@ export function Marquee({
           {row.map((item, index) => (
             <span key={index} className="flex items-center gap-10">
               <span className="display-md text-sand/70">{item}</span>
-              <span className="h-1.5 w-1.5 rotate-45 bg-brass/70" />
+              <span className="h-1.5 w-1.5 rotate-45 bg-accent/70" />
             </span>
           ))}
         </div>

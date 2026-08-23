@@ -23,16 +23,16 @@ export function LoginForm({ from }: { from?: string }) {
           autoComplete="current-password"
           required
           autoFocus
-          className="mt-3 w-full border-b border-line bg-transparent py-3 text-sand transition-colors duration-300 focus:border-brass focus:outline-none"
+          className="mt-3 w-full border-b border-line bg-transparent py-3 text-sand transition-colors duration-300 focus:border-accent focus:outline-none"
         />
       </div>
 
-      {state.error && <p className="text-sm text-brass">{state.error}</p>}
+      {state.error && <p className="text-sm text-accent">{state.error}</p>}
 
       <button
         type="submit"
         disabled={pending}
-        className="w-full rounded-full bg-sand px-8 py-3.5 text-xs font-medium tracking-[0.1em] text-ink uppercase transition-colors duration-300 hover:bg-brass disabled:opacity-60"
+        className="w-full rounded-full bg-sand px-8 py-3.5 text-xs font-medium tracking-[0.1em] text-ink uppercase transition-colors duration-300 hover:bg-accent disabled:opacity-60"
       >
         {pending ? "Проверяем…" : "Войти"}
       </button>

@@ -24,7 +24,7 @@ export function LocaleSwitch({ locale, label }: { locale: Locale; label: string 
     <button
       type="button"
       onClick={switchLocale}
-      className="text-[11px] tracking-[0.18em] text-sand-dim uppercase transition-colors duration-300 hover:text-brass"
+      className="text-[11px] tracking-[0.18em] text-sand-dim uppercase transition-colors duration-300 hover:text-accent"
       aria-label={`Switch language to ${target.toUpperCase()}`}
     >
       {label}

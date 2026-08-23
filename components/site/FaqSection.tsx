@@ -30,7 +30,7 @@ export function FaqSection({ items, locale }: { items: FaqItem[]; locale: Locale
                 <span
                   className={cn(
                     "flex-1 font-display text-xl transition-colors duration-500 md:text-2xl",
-                    open ? "text-brass" : "text-sand group-hover:text-brass",
+                    open ? "text-accent" : "text-sand group-hover:text-accent",
                   )}
                 >
                   {t(item.question, locale)}
@@ -38,7 +38,7 @@ export function FaqSection({ items, locale }: { items: FaqItem[]; locale: Locale
                 <span
                   className={cn(
                     "relative mt-1 flex h-6 w-6 shrink-0 items-center justify-center transition-transform duration-500",
-                    open ? "rotate-45 text-brass" : "text-sand-dim",
+                    open ? "rotate-45 text-accent" : "text-sand-dim",
                   )}
                   aria-hidden="true"
                 >

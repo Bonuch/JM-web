@@ -66,9 +66,9 @@ export function ProjectHero({
         >
           <Link
             href={localePath(locale, "/portfolio")}
-            className="group inline-flex items-center gap-3 text-[11px] tracking-[0.2em] text-sand-dim uppercase transition-colors duration-300 hover:text-brass"
+            className="group inline-flex items-center gap-3 text-[11px] tracking-[0.2em] text-sand-dim uppercase transition-colors duration-300 hover:text-accent"
           >
-            <ArrowRight className="rotate-180 group-hover:-translate-x-1" />
+            <ArrowRight className="rotate-180" />
             {dict.common.backToPortfolio}
           </Link>
         </motion.div>
@@ -90,13 +90,13 @@ export function ProjectHero({
           <span>{dict.categories[project.category]}</span>
           {t(project.location, locale) && (
             <>
-              <span className="h-1 w-1 rotate-45 bg-brass" />
+              <span className="h-1 w-1 rotate-45 bg-accent" />
               <span>{t(project.location, locale)}</span>
             </>
           )}
           {project.year && (
             <>
-              <span className="h-1 w-1 rotate-45 bg-brass" />
+              <span className="h-1 w-1 rotate-45 bg-accent" />
               <span>{project.year}</span>
             </>
           )}

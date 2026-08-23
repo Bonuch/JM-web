@@ -56,13 +56,13 @@ export function ServicesSection({
                     <span
                       className={cn(
                         "display-md transition-colors duration-500",
-                        open ? "text-brass" : "text-sand group-hover:text-brass",
+                        open ? "text-accent" : "text-sand group-hover:text-accent",
                       )}
                     >
                       {title}
                     </span>
                     {service.highlighted && (
-                      <span className="rounded-full border border-brass/40 px-3 py-1 text-[10px] tracking-[0.18em] text-brass uppercase">
+                      <span className="rounded-full border border-accent/40 px-3 py-1 text-[10px] tracking-[0.18em] text-accent uppercase">
                         {locale === "ru" ? "чаще всего" : "most popular"}
                       </span>
                     )}
@@ -82,7 +82,7 @@ export function ServicesSection({
                 <span
                   className={cn(
                     "relative ml-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border transition-all duration-500",
-                    open ? "rotate-45 border-brass text-brass" : "border-line-strong text-sand-dim",
+                    open ? "rotate-45 border-accent text-accent" : "border-line-strong text-sand-dim",
                   )}
                   aria-hidden="true"
                 >
@@ -110,7 +110,7 @@ export function ServicesSection({
                           <button
                             type="button"
                             onClick={() => onSelect(title)}
-                            className="link-underline mt-8 text-[11px] tracking-[0.18em] text-brass uppercase"
+                            className="link-underline mt-8 text-[11px] tracking-[0.18em] text-accent uppercase"
                           >
                             {dict.services.order}
                           </button>
@@ -124,7 +124,7 @@ export function ServicesSection({
                         <ul className="mt-5 space-y-3">
                           {service.includes.map((item, itemIndex) => (
                             <li key={itemIndex} className="flex gap-3 text-sm text-sand-dim">
-                              <span className="mt-2 h-1 w-1 shrink-0 rotate-45 bg-brass" />
+                              <span className="mt-2 h-1 w-1 shrink-0 rotate-45 bg-accent" />
                               {t(item, locale)}
                             </li>
                           ))}

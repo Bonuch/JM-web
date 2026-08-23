@@ -49,14 +49,14 @@ export function PortfolioBrowser({
               onClick={() => setFilter(key)}
               className={cn(
                 "relative pb-1 text-[11px] tracking-[0.18em] uppercase transition-colors duration-300",
-                filter === key ? "text-brass" : "text-muted hover:text-sand",
+                filter === key ? "text-accent" : "text-muted hover:text-sand",
               )}
             >
               {dict.categories[key]}
               {filter === key && (
                 <motion.span
                   layoutId="portfolio-filter"
-                  className="absolute inset-x-0 -bottom-px h-px bg-brass"
+                  className="absolute inset-x-0 -bottom-px h-px bg-accent"
                   transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
                 />
               )}

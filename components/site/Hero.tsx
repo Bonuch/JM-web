@@ -8,7 +8,7 @@ import type { ImageAsset, Settings } from "@/lib/types";
 import { TextReveal } from "@/components/motion/TextReveal";
 import { useSiteReady } from "./Preloader";
 import { AssetImage } from "./AssetImage";
-import { ArrowRight, ButtonLink } from "@/components/ui/Button";
+import { ButtonLink } from "@/components/ui/Button";
 
 /**
  * Первый экран. Фон уезжает медленнее контента и подсвечивается тёплым
@@ -132,7 +132,6 @@ export function Hero({
           >
             <ButtonLink href={localePath(locale, "/portfolio")} size="lg">
               {dict.hero.cta}
-              <ArrowRight />
             </ButtonLink>
             <ButtonLink href={localePath(locale, "/services")} variant="outline" size="lg">
               {dict.hero.secondary}
@@ -148,7 +147,7 @@ export function Hero({
         >
           <div className="flex items-center gap-3 text-[11px] tracking-[0.22em] text-muted uppercase">
             <span className="relative flex h-8 w-px overflow-hidden bg-line-strong">
-              <span className="absolute inset-x-0 h-2 animate-[var(--animate-scroll-hint)] bg-brass" />
+              <span className="absolute inset-x-0 h-2 animate-[var(--animate-scroll-hint)] bg-accent" />
             </span>
             {dict.hero.scroll}
           </div>

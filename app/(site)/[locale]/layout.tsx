@@ -10,9 +10,10 @@ import { LOCALES } from "@/lib/types";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { CustomCursor } from "@/components/motion/CustomCursor";
 import { Header } from "@/components/site/Header";
-import { Footer } from "@/components/site/Footer";
+import { Footer, socialLinks } from "@/components/site/Footer";
 import { ScrollProgress } from "@/components/site/ScrollProgress";
 import { SiteLoading } from "@/components/site/Preloader";
+import { SiteAnalytics } from "@/components/site/Analytics";
 
 // Переменное начертание: подключаем без перечисления весов, чтобы были
 // доступны промежуточные значения (250, 275) — на них держатся заголовки.
@@ -87,11 +88,21 @@ export default async function LocaleLayout({
           <SmoothScroll>
             <ScrollProgress />
             <CustomCursor />
-            <Header locale={typedLocale} dict={dict} siteName={settings.siteName} />
+            <Header
+              locale={typedLocale}
+              dict={dict}
+              siteName={settings.siteName}
+              contacts={{
+                email: settings.email,
+                phone: settings.phone,
+                socials: socialLinks(settings),
+              }}
+            />
             <main id="main">{children}</main>
             <Footer locale={typedLocale} dict={dict} settings={settings} />
           </SmoothScroll>
         </SiteLoading>
+        <SiteAnalytics />
       </body>
     </html>
   );

@@ -37,7 +37,7 @@ const PIECES: Piece[] = [
     from: 0.28,
     to: 0.52,
     d: "M470 318 L676 318 L604 372 L352 372 Z",
-    fill: "rgba(194,163,107,0.12)",
+    fill: "rgba(237,231,222,0.09)",
     width: 0,
   },
   { from: 0.32, to: 0.5, d: "M470 318 L352 372 M676 318 L604 372", width: 0.8, accent: true },
@@ -62,7 +62,7 @@ const PIECES: Piece[] = [
     from: 0.66,
     to: 0.8,
     d: "M132 208 m-34 0 a34 34 0 1 0 68 0 a34 34 0 1 0 -68 0",
-    fill: "rgba(194,163,107,0.1)",
+    fill: "rgba(237,231,222,0.08)",
     width: 0,
   },
 
@@ -108,8 +108,8 @@ export function PreloaderScene({ progress }: { progress: number }) {
     >
       <defs>
         <radialGradient id="preloader-glow" cx="66%" cy="52%" r="46%">
-          <stop offset="0%" stopColor="rgba(194,163,107,0.28)" />
-          <stop offset="100%" stopColor="rgba(194,163,107,0)" />
+          <stop offset="0%" stopColor="rgba(237,231,222,0.2)" />
+          <stop offset="100%" stopColor="rgba(237,231,222,0)" />
         </radialGradient>
       </defs>
 
@@ -143,7 +143,7 @@ export function PreloaderScene({ progress }: { progress: number }) {
           <path
             key={index}
             d={piece.d}
-            stroke={piece.accent ? "var(--color-brass)" : "var(--color-sand)"}
+            stroke={piece.accent ? "var(--color-accent)" : "var(--color-sand)"}
             strokeWidth={piece.width ?? 1.2}
             strokeLinecap="round"
             strokeLinejoin="round"

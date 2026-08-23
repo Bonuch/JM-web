@@ -34,14 +34,14 @@ export default async function DashboardLayout({ children }: { children: ReactNod
             <Link
               href="/ru"
               target="_blank"
-              className="text-[11px] tracking-[0.16em] text-sand-dim uppercase transition-colors hover:text-brass"
+              className="text-[11px] tracking-[0.16em] text-sand-dim uppercase transition-colors hover:text-accent"
             >
               Открыть сайт
             </Link>
             <form action={logout}>
               <button
                 type="submit"
-                className="text-[11px] tracking-[0.16em] text-muted uppercase transition-colors hover:text-brass"
+                className="text-[11px] tracking-[0.16em] text-muted uppercase transition-colors hover:text-accent"
               >
                 Выйти
               </button>
@@ -51,9 +51,9 @@ export default async function DashboardLayout({ children }: { children: ReactNod
       </header>
 
       {storageBroken && (
-        <div className="border-b border-brass/30 bg-brass/10">
+        <div className="border-b border-accent/30 bg-accent/10">
           <div className="mx-auto max-w-6xl px-5 py-4 text-xs leading-relaxed text-sand">
-            <p className="font-medium text-brass">Хранилище изображений не подключено</p>
+            <p className="font-medium text-accent">Хранилище изображений не подключено</p>
             <p className="mt-2 max-w-3xl text-sand-dim">
               Загрузка файлов сейчас не работает: на сервере Vercel нельзя писать на диск, а
               хранилище Blob к проекту не подключено. В панели Vercel откройте вкладку{" "}

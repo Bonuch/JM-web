@@ -8,7 +8,7 @@ import { StatsSection } from "@/components/site/StatsSection";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { ContactSection } from "@/components/site/ContactSection";
 import { Reveal } from "@/components/motion/Reveal";
-import { ArrowRight, ButtonLink } from "@/components/ui/Button";
+import { ButtonLink } from "@/components/ui/Button";
 
 // Контент правится в админке, поэтому страница пересобирается по расписанию
 // и принудительно — сразу после сохранения (см. revalidatePath в действиях).
@@ -58,7 +58,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               aside={
                 <ButtonLink href={localePath(locale, "/portfolio")} variant="outline">
                   {dict.common.allProjects}
-                  <ArrowRight />
                 </ButtonLink>
               }
             />
@@ -80,7 +79,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           aside={
             <ButtonLink href={localePath(locale, "/services")} variant="outline">
               {dict.common.more}
-              <ArrowRight />
             </ButtonLink>
           }
         />
@@ -98,7 +96,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                   </p>
                 </div>
                 <div className="hairline flex items-baseline justify-between gap-4 pt-6">
-                  <span className="text-sm text-brass">{t(service.price, locale)}</span>
+                  <span className="text-sm text-accent">{t(service.price, locale)}</span>
                   <span className="text-xs text-muted">{t(service.duration, locale)}</span>
                 </div>
               </div>

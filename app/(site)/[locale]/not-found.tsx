@@ -17,7 +17,7 @@ export default function NotFound() {
 
       <Link
         href={localePath(DEFAULT_LOCALE)}
-        className="group mt-12 inline-flex w-fit items-center gap-3 text-[11px] tracking-[0.2em] text-brass uppercase"
+        className="group mt-12 inline-flex w-fit items-center gap-3 text-[11px] tracking-[0.2em] text-accent uppercase"
       >
         {dict.notFound.button}
         <ArrowRight />

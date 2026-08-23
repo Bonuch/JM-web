@@ -120,7 +120,7 @@ export function SiteLoading({ children }: { children: ReactNode }) {
               <div className="mt-10 w-full max-w-md">
                 <div className="h-px w-full bg-line">
                   <div
-                    className="h-px bg-brass"
+                    className="h-px bg-accent"
                     style={{
                       width: `${Math.round(progress * 100)}%`,
                       transition: "width 420ms ease-out",

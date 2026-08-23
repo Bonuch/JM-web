@@ -26,12 +26,12 @@ export function AdminNav({ unread }: { unread: number }) {
             href={item.href}
             className={cn(
               "relative text-[11px] tracking-[0.16em] uppercase transition-colors",
-              active ? "text-brass" : "text-sand-dim hover:text-sand",
+              active ? "text-accent" : "text-sand-dim hover:text-sand",
             )}
           >
             {item.label}
             {item.href === "/admin/leads" && unread > 0 && (
-              <span className="ml-2 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-brass px-1 text-[10px] font-medium text-ink">
+              <span className="ml-2 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[10px] font-medium text-ink">
                 {unread}
               </span>
             )}

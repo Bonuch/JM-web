@@ -13,7 +13,7 @@ export function StatsSection({ stats, locale }: { stats: StatItem[]; locale: Loc
         {stats.map((stat, index) => (
           <Reveal key={stat.id} delay={index * 0.08}>
             <div>
-              <p className="display-md text-brass">
+              <p className="display-md text-accent">
                 <CountUp value={stat.value} />
               </p>
               <p className="mt-3 text-sm leading-snug text-muted">{t(stat.label, locale)}</p>

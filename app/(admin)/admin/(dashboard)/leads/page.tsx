@@ -17,7 +17,7 @@ export default async function LeadsPage() {
       </p>
 
       {!telegram && (
-        <p className="mt-6 border border-brass/30 bg-brass/5 p-4 text-xs leading-relaxed text-sand-dim">
+        <p className="mt-6 border border-accent/30 bg-accent/5 p-4 text-xs leading-relaxed text-sand-dim">
           Уведомления в Telegram не настроены — заявки видно только здесь. Как их включить,
           написано в разделе «Настройки».
         </p>

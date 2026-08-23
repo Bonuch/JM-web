@@ -2,7 +2,7 @@ import Link from "next/link";
 import { localePath, t, type Dictionary, type Locale } from "@/lib/i18n";
 import type { Settings } from "@/lib/types";
 import { Reveal } from "@/components/motion/Reveal";
-import { ArrowRight, ButtonLink } from "@/components/ui/Button";
+import { ButtonLink } from "@/components/ui/Button";
 
 /** Соцсети выводим только те, что реально заполнены в админке. */
 export function socialLinks(settings: Settings): { label: string; href: string }[] {
@@ -44,7 +44,6 @@ export function Footer({
           <Reveal delay={0.12}>
             <ButtonLink href={localePath(locale, "/contacts")} size="lg" variant="solid">
               {dict.nav.cta}
-              <ArrowRight />
             </ButtonLink>
           </Reveal>
         </div>

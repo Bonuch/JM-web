@@ -70,12 +70,12 @@ export function SettingsEditor({
         </div>
 
         <div className="flex items-center gap-4">
-          {saved && !pending && !saveError && <span className="text-xs text-brass">Сохранено</span>}
+          {saved && !pending && !saveError && <span className="text-xs text-accent">Сохранено</span>}
           <button
             type="button"
             onClick={save}
             disabled={pending}
-            className="rounded-full bg-sand px-6 py-3 text-xs font-medium tracking-[0.1em] text-ink uppercase transition-colors hover:bg-brass disabled:opacity-50"
+            className="rounded-full bg-sand px-6 py-3 text-xs font-medium tracking-[0.1em] text-ink uppercase transition-colors hover:bg-accent disabled:opacity-50"
           >
             {pending ? "Сохраняем…" : "Сохранить"}
           </button>
@@ -83,7 +83,7 @@ export function SettingsEditor({
       </div>
 
       {saveError && (
-        <p className="mt-6 border border-brass/30 bg-brass/10 p-4 text-xs leading-relaxed text-sand">
+        <p className="mt-6 border border-accent/30 bg-accent/10 p-4 text-xs leading-relaxed text-sand">
           {saveError}
         </p>
       )}
@@ -96,7 +96,7 @@ export function SettingsEditor({
             onClick={() => setTab(item.id)}
             className={cn(
               "text-[11px] tracking-[0.16em] uppercase transition-colors",
-              tab === item.id ? "text-brass" : "text-muted hover:text-sand",
+              tab === item.id ? "text-accent" : "text-muted hover:text-sand",
             )}
           >
             {item.label}
@@ -253,12 +253,12 @@ export function SettingsEditor({
                     );
                   })
                 }
-                className="mt-6 rounded-full border border-line-strong px-5 py-2.5 text-[11px] tracking-[0.12em] text-sand uppercase transition-colors hover:border-brass hover:text-brass disabled:opacity-40"
+                className="mt-6 rounded-full border border-line-strong px-5 py-2.5 text-[11px] tracking-[0.12em] text-sand uppercase transition-colors hover:border-accent hover:text-accent disabled:opacity-40"
               >
                 Обновить сайт
               </button>
 
-              {refreshResult && <p className="mt-4 text-xs text-brass">{refreshResult}</p>}
+              {refreshResult && <p className="mt-4 text-xs text-accent">{refreshResult}</p>}
             </div>
 
             <div className="border border-line bg-surface/30 p-6">
@@ -277,14 +277,14 @@ export function SettingsEditor({
                     setStorageCheck(await checkStorageAction());
                   })
                 }
-                className="mt-6 rounded-full border border-line-strong px-5 py-2.5 text-[11px] tracking-[0.12em] text-sand uppercase transition-colors hover:border-brass hover:text-brass disabled:opacity-40"
+                className="mt-6 rounded-full border border-line-strong px-5 py-2.5 text-[11px] tracking-[0.12em] text-sand uppercase transition-colors hover:border-accent hover:text-accent disabled:opacity-40"
               >
                 Проверить хранилище
               </button>
 
               {storageCheck && (
                 <div className="mt-5 space-y-2 border-t border-line pt-5 text-xs leading-relaxed">
-                  <p className={storageCheck.ok ? "text-brass" : "text-sand"}>
+                  <p className={storageCheck.ok ? "text-accent" : "text-sand"}>
                     {storageCheck.message}
                   </p>
                   <p className="text-muted">
@@ -332,7 +332,7 @@ export function SettingsEditor({
             <div className="border border-line bg-surface/30 p-6">
               <p className="text-sm text-sand">
                 Уведомления в Telegram:{" "}
-                <span className={telegramConfigured ? "text-brass" : "text-muted"}>
+                <span className={telegramConfigured ? "text-accent" : "text-muted"}>
                   {telegramConfigured ? "настроены" : "не настроены"}
                 </span>
               </p>
@@ -357,12 +357,12 @@ export function SettingsEditor({
                     );
                   })
                 }
-                className="mt-6 rounded-full border border-line-strong px-5 py-2.5 text-[11px] tracking-[0.12em] text-sand uppercase transition-colors hover:border-brass hover:text-brass disabled:opacity-40"
+                className="mt-6 rounded-full border border-line-strong px-5 py-2.5 text-[11px] tracking-[0.12em] text-sand uppercase transition-colors hover:border-accent hover:text-accent disabled:opacity-40"
               >
                 Отправить тестовое сообщение
               </button>
 
-              {testResult && <p className="mt-4 text-xs text-brass">{testResult}</p>}
+              {testResult && <p className="mt-4 text-xs text-accent">{testResult}</p>}
             </div>
           </div>
         )}
@@ -466,7 +466,7 @@ function ServicesEditor({
                           includes: service.includes.filter((_, position) => position !== itemIndex),
                         })
                       }
-                      className="mt-7 text-[10px] tracking-[0.12em] text-muted uppercase hover:text-brass"
+                      className="mt-7 text-[10px] tracking-[0.12em] text-muted uppercase hover:text-accent"
                     >
                       убрать
                     </button>
@@ -478,7 +478,7 @@ function ServicesEditor({
                 onClick={() =>
                   update(service.id, { includes: [...service.includes, emptyLocalized()] })
                 }
-                className="mt-4 rounded-full border border-line px-4 py-2 text-[10px] tracking-[0.12em] text-muted uppercase hover:border-brass hover:text-brass"
+                className="mt-4 rounded-full border border-line px-4 py-2 text-[10px] tracking-[0.12em] text-muted uppercase hover:border-accent hover:text-accent"
               >
                 добавить пункт
               </button>
@@ -500,7 +500,7 @@ function ServicesEditor({
                   [next[index], next[index - 1]] = [next[index - 1], next[index]];
                   onChange(next.map((item, position) => ({ ...item, order: position })));
                 }}
-                className="rounded-full border border-line px-3 py-1.5 text-[10px] text-muted hover:border-brass hover:text-brass disabled:opacity-30"
+                className="rounded-full border border-line px-3 py-1.5 text-[10px] text-muted hover:border-accent hover:text-accent disabled:opacity-30"
               >
                 ↑
               </button>
@@ -512,14 +512,14 @@ function ServicesEditor({
                   [next[index], next[index + 1]] = [next[index + 1], next[index]];
                   onChange(next.map((item, position) => ({ ...item, order: position })));
                 }}
-                className="rounded-full border border-line px-3 py-1.5 text-[10px] text-muted hover:border-brass hover:text-brass disabled:opacity-30"
+                className="rounded-full border border-line px-3 py-1.5 text-[10px] text-muted hover:border-accent hover:text-accent disabled:opacity-30"
               >
                 ↓
               </button>
               <button
                 type="button"
                 onClick={() => onChange(services.filter((item) => item.id !== service.id))}
-                className="ml-auto text-[10px] tracking-[0.12em] text-muted uppercase hover:text-brass"
+                className="ml-auto text-[10px] tracking-[0.12em] text-muted uppercase hover:text-accent"
               >
                 удалить услугу
               </button>
@@ -531,7 +531,7 @@ function ServicesEditor({
       <button
         type="button"
         onClick={add}
-        className="rounded-full border border-line-strong px-5 py-2.5 text-[11px] tracking-[0.12em] text-sand uppercase hover:border-brass hover:text-brass"
+        className="rounded-full border border-line-strong px-5 py-2.5 text-[11px] tracking-[0.12em] text-sand uppercase hover:border-accent hover:text-accent"
       >
         Добавить услугу
       </button>
@@ -566,7 +566,7 @@ function FaqEditor({ faq, onChange }: { faq: FaqItem[]; onChange: (faq: FaqItem[
           <button
             type="button"
             onClick={() => onChange(faq.filter((existing) => existing.id !== item.id))}
-            className="text-[10px] tracking-[0.12em] text-muted uppercase hover:text-brass"
+            className="text-[10px] tracking-[0.12em] text-muted uppercase hover:text-accent"
           >
             удалить вопрос
           </button>
@@ -586,7 +586,7 @@ function FaqEditor({ faq, onChange }: { faq: FaqItem[]; onChange: (faq: FaqItem[
             },
           ])
         }
-        className="rounded-full border border-line-strong px-5 py-2.5 text-[11px] tracking-[0.12em] text-sand uppercase hover:border-brass hover:text-brass"
+        className="rounded-full border border-line-strong px-5 py-2.5 text-[11px] tracking-[0.12em] text-sand uppercase hover:border-accent hover:text-accent"
       >
         Добавить вопрос
       </button>
@@ -628,7 +628,7 @@ function StatsEditor({
           <button
             type="button"
             onClick={() => onChange(stats.filter((item) => item.id !== stat.id))}
-            className="mt-7 text-[10px] tracking-[0.12em] text-muted uppercase hover:text-brass"
+            className="mt-7 text-[10px] tracking-[0.12em] text-muted uppercase hover:text-accent"
           >
             убрать
           </button>
@@ -640,7 +640,7 @@ function StatsEditor({
         onClick={() =>
           onChange([...stats, { id: crypto.randomUUID(), value: "", label: emptyLocalized() }])
         }
-        className="rounded-full border border-line-strong px-5 py-2.5 text-[11px] tracking-[0.12em] text-sand uppercase hover:border-brass hover:text-brass"
+        className="rounded-full border border-line-strong px-5 py-2.5 text-[11px] tracking-[0.12em] text-sand uppercase hover:border-accent hover:text-accent"
       >
         Добавить цифру
       </button>

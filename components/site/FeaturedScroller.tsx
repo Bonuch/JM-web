@@ -92,7 +92,7 @@ export function FeaturedScroller({
             <div className="flex w-[28vw] shrink-0 items-center">
               <Link
                 href={localePath(locale, "/portfolio")}
-                className="group flex items-center gap-4 text-sand transition-colors duration-500 hover:text-brass"
+                className="group flex items-center gap-4 text-sand transition-colors duration-500 hover:text-accent"
               >
                 <span className="display-md">{dict.common.allProjects}</span>
                 <ArrowRight className="h-5 w-5" />
@@ -141,7 +141,7 @@ function FeaturedCard({
       </div>
 
       <div className="mt-6 flex items-baseline justify-between gap-6">
-        <h3 className="display-md text-sand transition-colors duration-500 group-hover:text-brass">
+        <h3 className="display-md text-sand transition-colors duration-500 group-hover:text-accent">
           {t(project.title, locale)}
         </h3>
         <span className="shrink-0 text-[11px] tracking-[0.16em] text-muted uppercase">

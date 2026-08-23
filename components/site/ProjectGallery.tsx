@@ -121,7 +121,7 @@ export function ProjectGallery({
               type="button"
               onClick={close}
               aria-label={dict.common.close}
-              className="absolute top-6 right-6 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-line-strong text-sand transition-colors duration-300 hover:border-brass hover:text-brass"
+              className="absolute top-6 right-6 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-line-strong text-sand transition-colors duration-300 hover:border-accent hover:text-accent"
             >
               <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" aria-hidden="true">
                 <path d="m6 6 12 12M18 6 6 18" stroke="currentColor" strokeWidth="1.5" />
@@ -205,7 +205,7 @@ function LightboxArrow({
       onClick={onClick}
       aria-label={label}
       className={cn(
-        "absolute top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-line-strong text-sand transition-colors duration-300 hover:border-brass hover:text-brass",
+        "absolute top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-line-strong text-sand transition-colors duration-300 hover:border-accent hover:text-accent",
         side === "left" ? "left-4 md:left-8" : "right-4 md:right-8",
       )}
     >

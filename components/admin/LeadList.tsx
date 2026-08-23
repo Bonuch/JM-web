@@ -38,7 +38,7 @@ export function LeadList({ leads }: { leads: Lead[] }) {
   return (
     <div className={cn("mt-8 border-t border-line", pending && "opacity-60")}>
       {error && (
-        <p className="border-b border-brass/30 bg-brass/10 px-4 py-3 text-xs leading-relaxed text-sand">
+        <p className="border-b border-accent/30 bg-accent/10 px-4 py-3 text-xs leading-relaxed text-sand">
           {error}
         </p>
       )}
@@ -60,7 +60,7 @@ export function LeadList({ leads }: { leads: Lead[] }) {
               <span
                 className={cn(
                   "h-2 w-2 shrink-0 rounded-full",
-                  lead.read ? "bg-transparent" : "bg-brass",
+                  lead.read ? "bg-transparent" : "bg-accent",
                 )}
                 aria-hidden="true"
               />
@@ -94,7 +94,7 @@ export function LeadList({ leads }: { leads: Lead[] }) {
                   {href && (
                     <a
                       href={href}
-                      className="rounded-full border border-line-strong px-4 py-2 text-[10px] tracking-[0.12em] text-sand uppercase transition-colors hover:border-brass hover:text-brass"
+                      className="rounded-full border border-line-strong px-4 py-2 text-[10px] tracking-[0.12em] text-sand uppercase transition-colors hover:border-accent hover:text-accent"
                     >
                       Ответить
                     </a>
@@ -102,14 +102,14 @@ export function LeadList({ leads }: { leads: Lead[] }) {
                   <button
                     type="button"
                     onClick={() => run(() => setLeadReadAction(lead.id, !lead.read))}
-                    className="rounded-full border border-line px-4 py-2 text-[10px] tracking-[0.12em] text-muted uppercase transition-colors hover:border-brass hover:text-brass"
+                    className="rounded-full border border-line px-4 py-2 text-[10px] tracking-[0.12em] text-muted uppercase transition-colors hover:border-accent hover:text-accent"
                   >
                     {lead.read ? "Пометить новой" : "Пометить прочитанной"}
                   </button>
                   <button
                     type="button"
                     onClick={() => run(() => deleteLeadAction(lead.id))}
-                    className="text-[10px] tracking-[0.12em] text-muted uppercase transition-colors hover:text-brass"
+                    className="text-[10px] tracking-[0.12em] text-muted uppercase transition-colors hover:text-accent"
                   >
                     Удалить
                   </button>

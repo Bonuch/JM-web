@@ -30,12 +30,17 @@ export const viewport: Viewport = {
  * заголовков запроса нельзя, иначе весь сайт уедет из статики в рендер на
  * каждый запрос. Поэтому в разметке стоит язык по умолчанию, а фактический
  * проставляет [locale]/layout сразу при разборе документа.
+ *
+ * Отсюда и suppressHydrationWarning на <html>: к моменту гидратации lang уже
+ * не тот, что пришёл с сервера, и React считает это ошибкой на каждой
+ * странице, кроме русской. Подавление действует только на атрибуты самого
+ * <html> — расхождения внутри дерева по-прежнему видны.
  */
 export default async function SiteRootLayout({ children }: { children: ReactNode }) {
   const settings = await getSettings();
 
   return (
-    <html lang={DEFAULT_LOCALE} className={inter.variable}>
+    <html lang={DEFAULT_LOCALE} className={inter.variable} suppressHydrationWarning>
       <body className="bg-ink text-sand antialiased">
         <SiteShell settings={settings}>{children}</SiteShell>
         <SiteAnalytics />

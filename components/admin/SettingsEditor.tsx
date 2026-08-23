@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { cn } from "@/lib/cn";
 import {
   checkStorageAction,
+  refreshSiteAction,
   saveSettingsAction,
   sendTestNotificationAction,
   type StorageCheck,
@@ -42,6 +43,7 @@ export function SettingsEditor({
   const [testResult, setTestResult] = useState<string | null>(null);
   const [storageCheck, setStorageCheck] = useState<StorageCheck | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [refreshResult, setRefreshResult] = useState<string | null>(null);
 
   const patch = <K extends keyof Settings>(key: K, value: Settings[K]) => {
     setSettings((current) => ({ ...current, [key]: value }));
@@ -230,6 +232,35 @@ export function SettingsEditor({
 
         {tab === "notifications" && (
           <div className="space-y-6">
+            <div className="border border-line bg-surface/30 p-6">
+              <p className="text-sm text-sand">Обновление сайта</p>
+              <p className="mt-3 text-xs leading-relaxed text-muted">
+                Страницы сайта отдаются из кэша, чтобы открываться мгновенно. После сохранения
+                кэш сбрасывается сам, но если правка почему-то не появилась — сбросьте вручную и
+                обновите страницу сайта.
+              </p>
+
+              <button
+                type="button"
+                disabled={pending}
+                onClick={() =>
+                  startTransition(async () => {
+                    const result = await refreshSiteAction();
+                    setRefreshResult(
+                      result.ok
+                        ? "Кэш сброшен — обновите страницу сайта."
+                        : result.error,
+                    );
+                  })
+                }
+                className="mt-6 rounded-full border border-line-strong px-5 py-2.5 text-[11px] tracking-[0.12em] text-sand uppercase transition-colors hover:border-brass hover:text-brass disabled:opacity-40"
+              >
+                Обновить сайт
+              </button>
+
+              {refreshResult && <p className="mt-4 text-xs text-brass">{refreshResult}</p>}
+            </div>
+
             <div className="border border-line bg-surface/30 p-6">
               <p className="text-sm text-sand">Хранилище изображений</p>
               <p className="mt-3 text-xs leading-relaxed text-muted">

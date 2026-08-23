@@ -21,7 +21,7 @@ import {
   isBlobConfigured,
   storageVariableNames,
 } from "@/lib/storage";
-import type { ImageAsset, Project, Settings } from "@/lib/types";
+import { LOCALES, type ImageAsset, type Project, type Settings } from "@/lib/types";
 
 /**
  * Результат действия админки.
@@ -62,10 +62,35 @@ function describeFailure(error: unknown): string {
   return `Не удалось сохранить: ${message}`;
 }
 
-/** Публичные страницы кэшируются, поэтому после каждой правки сбрасываем их. */
+/**
+ * Публичные страницы отдаются из кэша, поэтому после каждой правки его нужно
+ * сбросить. Одного шаблона `/[locale]` мало: страницы собраны заранее под
+ * конкретные языки, и надёжнее перечислить их прямо — иначе правка появляется
+ * только после того, как истечёт срок жизни кэша.
+ */
 function revalidateSite() {
   invalidateSiteCache();
+
   revalidatePath("/[locale]", "layout");
+
+  for (const locale of LOCALES) {
+    revalidatePath(`/${locale}`);
+    revalidatePath(`/${locale}/portfolio`);
+    revalidatePath(`/${locale}/services`);
+    revalidatePath(`/${locale}/contacts`);
+    revalidatePath(`/${locale}/portfolio/[slug]`, "page");
+  }
+}
+
+/** Сброс кэша по кнопке — на случай, если правка почему-то не проявилась. */
+export async function refreshSiteAction(): Promise<ActionResult> {
+  try {
+    await requireAdmin();
+    revalidateSite();
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, error: describeFailure(error) };
+  }
 }
 
 export type LoginState = { error: string | null };

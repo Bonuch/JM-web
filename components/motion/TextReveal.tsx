@@ -2,6 +2,7 @@
 
 import { useRef, type ElementType } from "react";
 import { motion, useInView, useReducedMotion } from "motion/react";
+import { useSiteReady } from "@/components/site/Preloader";
 
 type TextRevealProps = {
   /** Переводы строк в тексте задают разбивку на анимируемые строки */
@@ -32,6 +33,8 @@ export function TextReveal({
   const ref = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
   const inView = useInView(ref, { once: true, margin: "-10% 0px -10% 0px" });
+  // заставка перекрывает первый экран: пока она видна, анимировать нечего
+  const siteReady = useSiteReady();
   const lines = text.split("\n");
 
   if (reduced) {
@@ -46,7 +49,7 @@ export function TextReveal({
     );
   }
 
-  const visible = immediate || inView;
+  const visible = immediate ? siteReady : inView;
 
   return (
     <Tag ref={ref} className={className}>

@@ -12,6 +12,7 @@ import { CustomCursor } from "@/components/motion/CustomCursor";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ScrollProgress } from "@/components/site/ScrollProgress";
+import { SiteLoading } from "@/components/site/Preloader";
 
 // Переменное начертание: подключаем без перечисления весов, чтобы были
 // доступны промежуточные значения (250, 275) — на них держатся заголовки.
@@ -82,13 +83,15 @@ export default async function LocaleLayout({
   return (
     <html lang={typedLocale} className={inter.variable}>
       <body className="bg-ink text-sand antialiased">
-        <SmoothScroll>
-          <ScrollProgress />
-          <CustomCursor />
-          <Header locale={typedLocale} dict={dict} siteName={settings.siteName} />
-          <main id="main">{children}</main>
-          <Footer locale={typedLocale} dict={dict} settings={settings} />
-        </SmoothScroll>
+        <SiteLoading>
+          <SmoothScroll>
+            <ScrollProgress />
+            <CustomCursor />
+            <Header locale={typedLocale} dict={dict} siteName={settings.siteName} />
+            <main id="main">{children}</main>
+            <Footer locale={typedLocale} dict={dict} settings={settings} />
+          </SmoothScroll>
+        </SiteLoading>
       </body>
     </html>
   );

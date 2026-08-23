@@ -5,6 +5,7 @@ import { motion, useReducedMotion, useScroll, useTransform } from "motion/react"
 import { localePath, plural, t, type Dictionary, type Locale } from "@/lib/i18n";
 import type { ImageAsset, Settings } from "@/lib/types";
 import { TextReveal } from "@/components/motion/TextReveal";
+import { useSiteReady } from "./Preloader";
 import { AssetImage } from "./AssetImage";
 import { ArrowRight, ButtonLink } from "@/components/ui/Button";
 
@@ -28,6 +29,8 @@ export function Hero({
 }) {
   const ref = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
+  // первый экран оживает не при монтировании, а когда уходит заставка
+  const ready = useSiteReady();
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -78,7 +81,7 @@ export function Hero({
         <motion.p
           className="eyebrow"
           initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
+          animate={ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
           transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
         >
           {t(settings.role, locale)}
@@ -96,7 +99,7 @@ export function Hero({
           <motion.p
             className="body-lead max-w-xl text-balance"
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 1, delay: 0.75, ease: [0.16, 1, 0.3, 1] }}
           >
             {t(settings.heroSubtitle, locale)}
@@ -105,7 +108,7 @@ export function Hero({
           <motion.div
             className="flex flex-wrap items-center gap-4"
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 1, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
           >
             <ButtonLink href={localePath(locale, "/portfolio")} size="lg">
@@ -121,7 +124,7 @@ export function Hero({
         <motion.div
           className="hairline mt-10 flex items-center justify-between pt-5"
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          animate={{ opacity: ready ? 1 : 0 }}
           transition={{ duration: 1, delay: 1.05 }}
         >
           <div className="flex items-center gap-3 text-[11px] tracking-[0.22em] text-muted uppercase">

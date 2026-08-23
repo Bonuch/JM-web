@@ -279,6 +279,12 @@ export function SettingsEditor({
                         ? storageCheck.tokenVariables.join(", ")
                         : "не найдены"}
                     </span>
+                    {storageCheck.tokenVariables.length > 1 && (
+                      <>
+                        {" · используется "}
+                        <span className="text-sand">{storageCheck.tokenVariables[0]}</span>
+                      </>
+                    )}
                   </p>
                   <p className="text-muted">
                     Все переменные хранилища:{" "}

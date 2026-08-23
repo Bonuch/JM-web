@@ -1,7 +1,8 @@
 "use client";
 
-import { useRef, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "motion/react";
+import { snapToPixel } from "./pixel-snap";
 
 type ParallaxProps = {
   children: ReactNode;
@@ -19,21 +20,37 @@ type ParallaxProps = {
 };
 
 /**
- * Слой, который движется относительно прокрутки. Считаем смещение в процентах
- * от собственной высоты: тогда эффект одинаков и на телефоне, и на мониторе.
+ * Слой, который движется относительно прокрутки.
+ *
+ * Смещение считается в пикселях от собственной высоты блока и округляется до
+ * пиксельной сетки: дробные значения заставляли браузер пересглаживать текст
+ * на каждом кадре, и на замедлении прокрутки это читалось как дрожание.
  */
 export function Parallax({ children, speed = 0.2, className, smooth = true }: ParallaxProps) {
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
+  const [height, setHeight] = useState(0);
 
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
   });
 
-  const raw = useTransform(scrollYProgress, [0, 1], [`${speed * 50}%`, `${-speed * 50}%`]);
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
+    const observer = new ResizeObserver(([entry]) => {
+      setHeight(entry.contentRect.height);
+    });
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  // при прогрессе 0 слой смещён вниз, при 1 — вверх, посередине совпадает
+  const raw = useTransform(scrollYProgress, (value) => (0.5 - value) * speed * height);
   const smoothed = useSpring(raw, { stiffness: 120, damping: 30, mass: 0.4 });
-  const y = smooth ? smoothed : raw;
+  const y = useTransform(smooth ? smoothed : raw, snapToPixel);
 
   if (reduced) {
     return (
@@ -81,7 +98,6 @@ export function ParallaxImage({
       <motion.div
         style={reduced ? undefined : { y }}
         className="absolute inset-0 will-change-transform"
-        // запас сверху и снизу, чтобы при сдвиге не появлялись пустые полосы
         initial={false}
       >
         <div

@@ -1,7 +1,8 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { snapToPixel } from "@/components/motion/pixel-snap";
 import { localePath, plural, t, type Dictionary, type Locale } from "@/lib/i18n";
 import type { ImageAsset, Settings } from "@/lib/types";
 import { TextReveal } from "@/components/motion/TextReveal";
@@ -39,8 +40,25 @@ export function Hero({
 
   const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "22%"]);
   const backgroundScale = useTransform(scrollYProgress, [0, 1], [1, 1.14]);
-  const contentY = useTransform(scrollYProgress, [0, 1], ["0%", "-28%"]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.65], [1, 0]);
+
+  // Текст первого экрана уезжает вверх на четверть своей высоты. Считаем сдвиг
+  // в пикселях и округляем: на дробных значениях глифы пересглаживаются каждый
+  // кадр, и на замедлении прокрутки заголовок заметно дрожит.
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [contentHeight, setContentHeight] = useState(0);
+
+  useEffect(() => {
+    const element = contentRef.current;
+    if (!element) return;
+    const observer = new ResizeObserver(([entry]) => setContentHeight(entry.contentRect.height));
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  const contentY = useTransform(scrollYProgress, (value) =>
+    snapToPixel(-value * 0.28 * contentHeight),
+  );
 
   return (
     <section
@@ -75,7 +93,8 @@ export function Hero({
       <div className="grain-overlay" />
 
       <motion.div
-        className="container-page relative z-10 pb-12 md:pb-16"
+        ref={contentRef}
+        className="container-page relative z-10 pb-12 md:pb-16 will-change-transform"
         style={reduced ? undefined : { y: contentY, opacity: contentOpacity }}
       >
         <motion.p

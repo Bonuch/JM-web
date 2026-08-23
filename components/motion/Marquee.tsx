@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { snapToPixel } from "./pixel-snap";
 
 /**
  * Бегущая строка. Контент дублируется дважды, поэтому анимация на -50%
@@ -24,7 +25,10 @@ export function Marquee({
     target: ref,
     offset: ["start end", "end start"],
   });
-  const drift = useTransform(scrollYProgress, [0, 1], reverse ? [80, -80] : [-80, 80]);
+  // дробное смещение заставляет браузер пересглаживать буквы на каждом кадре
+  const drift = useTransform(scrollYProgress, (value) =>
+    snapToPixel((reverse ? 1 - value : value) * 160 - 80),
+  );
 
   const row = [...items, ...items];
 

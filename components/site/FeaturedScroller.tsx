@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "motion/react";
 import { localePath, t, type Dictionary, type Locale } from "@/lib/i18n";
+import { snapToPixel } from "@/components/motion/pixel-snap";
 import type { Project } from "@/lib/types";
 import { AssetImage } from "./AssetImage";
 import { ArrowRight } from "@/components/ui/Button";
@@ -36,7 +37,9 @@ export function FeaturedScroller({
   });
 
   const rawX = useTransform(scrollYProgress, [0, 1], [0, -distance]);
-  const x = useSpring(rawX, { stiffness: 140, damping: 30, mass: 0.5 });
+  const smoothX = useSpring(rawX, { stiffness: 140, damping: 30, mass: 0.5 });
+  // подписи под кадрами едут вместе с лентой: держим их на пиксельной сетке
+  const x = useTransform(smoothX, snapToPixel);
 
   // Насколько трек длиннее экрана — ровно на столько его и нужно сдвинуть
   useEffect(() => {

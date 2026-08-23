@@ -43,3 +43,6 @@ next-env.d.ts
 # локальное хранилище контента и загруженные изображения
 /.data
 /public/uploads
+
+# IDE
+/.idea

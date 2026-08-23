@@ -95,7 +95,8 @@ export const en: Dictionary = {
     error: "Something went wrong. Please write to me on Telegram or by email.",
     required: "This field is required",
     invalidContact: "Leave a phone, email or username so I can reply",
-    consent: "By submitting the form you agree to the processing of your personal data.",
+    consent: "By submitting the form you consent to the processing of your personal data under the",
+    consentPolicy: "personal data policy",
   },
   contacts: {
     label: "Contact",
@@ -109,7 +110,86 @@ export const en: Dictionary = {
     rights: "All rights reserved.",
     nav: "Navigation",
     contacts: "Contact",
-    policy: "Privacy policy",
+    policy: "Personal data policy",
+  },
+  privacy: {
+    label: "Legal",
+    title: "Personal data policy",
+    updated: "Version of 23 August 2026",
+    intro:
+      "What data this site collects, why it is needed, where it is kept and how to have it deleted. The policy covers this site only and does not extend to third-party resources linked from it.",
+    sections: [
+      {
+        title: "1. Operator",
+        body: [
+          // {operator} is filled in from the LEGAL_OPERATOR variable — see ru.ts
+          "The personal data operator is {operator}.",
+          "The policy follows Russian Federal Law No. 152-FZ of 27 July 2006 “On Personal Data”.",
+        ],
+      },
+      {
+        title: "2. What is collected",
+        body: [
+          "Through the enquiry form: the name you provide; a contact for the reply — phone, email or messenger handle; the message itself; the selected service; the address of the page the enquiry was sent from and the interface language.",
+          "Automatically: your IP address — only at the moment the form is submitted, and only to limit how often one address can send enquiries. It is not stored with the enquiry.",
+          "The site never asks for identity documents, payment details or anything else not needed to discuss a project.",
+        ],
+      },
+      {
+        title: "3. Why it is needed",
+        body: [
+          "The only purpose is to answer you: clarify the brief, prepare a quote and a schedule, agree on the work.",
+          "The data is never used for mailings, never sold and never passed to advertising networks.",
+        ],
+      },
+      {
+        title: "4. Legal basis",
+        body: [
+          "Processing is based on your consent. You give it by pressing the submit button — this is stated next to the button.",
+          "Filling in the form is optional. If you would rather not, write directly by email or messenger — the addresses are in the Contact section.",
+        ],
+      },
+      {
+        title: "5. How the data is stored",
+        body: [
+          "Enquiries are stored encrypted: the file is sealed with AES-256-GCM and the key is kept apart from the data, in environment variables. Direct access to the file alone does not make it readable.",
+          "Only the operator can work with enquiries, through a password-protected admin panel.",
+          "Data is kept until consent is withdrawn. The store holds the 500 most recent enquiries; older ones are removed automatically.",
+        ],
+      },
+      {
+        title: "6. Who it is shared with",
+        body: [
+          "Hosting and storage — Vercel Inc. (USA). The site and the encrypted enquiry file run on its infrastructure.",
+          "If notifications are enabled, the operator receives a message about a new enquiry in Telegram (Telegram FZ-LLC, UAE), containing the name, contact, message text, selected service, page address and interface language.",
+          "Both companies are outside Russia, so the transfer is cross-border. By submitting the form you consent to that transfer as well.",
+          "The data goes to no one else, except where the law explicitly requires it.",
+        ],
+      },
+      {
+        title: "7. Cookies and statistics",
+        body: [
+          "The site sets one cookie of its own — the chosen interface language. It does not identify the visitor.",
+          "Traffic and loading speed are measured by Vercel Analytics and Speed Insights: anonymised page-view data, without cookies.",
+          "If a Yandex.Metrica counter is connected, it sets cookies of its own and collects anonymised visit data: pages viewed, referrer, device type, a click map and a recording of on-page actions (Webvisor).",
+          "You can opt out through browser settings or a blocker.",
+        ],
+      },
+      {
+        title: "8. Your rights",
+        body: [
+          "You may ask what data about you is processed, have it corrected or deleted, stop the processing and withdraw your consent.",
+          "An email to the contact address is enough — the operator will reply and act on it within ten working days at most.",
+        ],
+      },
+      {
+        title: "9. Changes",
+        body: [
+          "The policy may be updated. The current version is always published on this page, with its date shown above.",
+        ],
+      },
+    ],
+    contactsTitle: "Where to write",
   },
   notFound: {
     title: "Page not found",
@@ -127,6 +207,9 @@ export const en: Dictionary = {
     servicesTitle: "Services & pricing",
     servicesDescription:
       "Interior 3D visualization pricing: rates, what is included, delivery times.",
+    privacyTitle: "Personal data policy",
+    privacyDescription:
+      "What data this site collects, why it is needed, where it is kept and how to have it deleted.",
     contactsTitle: "Contact",
     contactsDescription:
       "Contact the interior 3D visualization studio: email, phone, Telegram, WhatsApp.",

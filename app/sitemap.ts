@@ -2,7 +2,14 @@ import type { MetadataRoute } from "next";
 import { getPublishedProjects } from "@/lib/content";
 import { LOCALES } from "@/lib/types";
 
-const STATIC_PATHS = ["", "/portfolio", "/services", "/contacts"];
+const STATIC_PATHS = [
+  { path: "", priority: 1 },
+  { path: "/portfolio", priority: 0.8 },
+  { path: "/services", priority: 0.8 },
+  { path: "/contacts", priority: 0.8 },
+  // служебная страница: индексировать стоит, но выше работ ей не место
+  { path: "/privacy", priority: 0.3 },
+];
 
 export const revalidate = 3600;
 
@@ -12,11 +19,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   const staticEntries = LOCALES.flatMap((locale) =>
-    STATIC_PATHS.map((path) => ({
-      url: `${base}/${locale}${path}`,
+    STATIC_PATHS.map((entry) => ({
+      url: `${base}/${locale}${entry.path}`,
       lastModified: now,
       changeFrequency: "monthly" as const,
-      priority: path === "" ? 1 : 0.8,
+      priority: entry.priority,
     })),
   );
 

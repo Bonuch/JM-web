@@ -112,7 +112,16 @@ export function Footer({
           <p>
             © {year} {settings.siteName}. {dict.footer.rights}
           </p>
-          <p className="tracking-[0.18em] uppercase">{t(settings.role, locale)}</p>
+
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-8">
+            <Link
+              href={localePath(locale, "/privacy")}
+              className="link-underline w-fit transition-colors duration-300 hover:text-sand"
+            >
+              {dict.footer.policy}
+            </Link>
+            <p className="tracking-[0.18em] uppercase">{t(settings.role, locale)}</p>
+          </div>
         </div>
       </div>
     </footer>

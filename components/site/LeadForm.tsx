@@ -1,11 +1,12 @@
 "use client";
 
 import { useActionState, useEffect, useId, useRef, useState } from "react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import { cn } from "@/lib/cn";
 import { submitLead, type LeadFormState } from "@/lib/actions/lead";
-import { t, type Dictionary, type Locale } from "@/lib/i18n";
+import { localePath, t, type Dictionary, type Locale } from "@/lib/i18n";
 import { GOAL_LEAD_SUBMITTED, trackGoal } from "@/lib/analytics";
 import type { ServiceItem } from "@/lib/types";
 import { Button } from "@/components/ui/Button";
@@ -170,7 +171,23 @@ export function LeadForm({
                 {pending ? dict.form.sending : dict.form.submit}
               </Button>
 
-              <p className="max-w-xs text-xs leading-relaxed text-muted">{dict.form.consent}</p>
+              {/* Согласие читают редко, но прочесть его должно быть можно:
+                  text-muted здесь не проходит по контрасту, а ссылка внутри
+                  строки различается только цветом — поэтому подчёркивание
+                  постоянное, а не по наведению. Открываем в новой вкладке:
+                  уход со страницы стёр бы уже заполненную форму. */}
+              <p className="max-w-xs text-xs leading-relaxed text-sand-dim">
+                {dict.form.consent}{" "}
+                <Link
+                  href={localePath(locale, "/privacy")}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="text-sand underline decoration-line-strong underline-offset-4 transition-colors duration-300 hover:text-accent hover:decoration-accent"
+                >
+                  {dict.form.consentPolicy}
+                </Link>
+                .
+              </p>
             </div>
           </motion.form>
         )}

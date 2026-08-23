@@ -1,20 +1,19 @@
+"use client";
+
 import Link from "next/link";
 import { localePath, t, type Dictionary, type Locale } from "@/lib/i18n";
 import type { Settings } from "@/lib/types";
-import { Reveal } from "@/components/motion/Reveal";
-import { ButtonLink } from "@/components/ui/Button";
+import { socialLinks } from "@/lib/socials";
 
-/** Соцсети выводим только те, что реально заполнены в админке. */
-export function socialLinks(settings: Settings): { label: string; href: string }[] {
-  return [
-    { label: "Behance", href: settings.behance },
-    { label: "Telegram", href: settings.telegram },
-    { label: "WhatsApp", href: settings.whatsapp },
-    { label: "Instagram", href: settings.instagram },
-    { label: "Pinterest", href: settings.pinterest },
-  ].filter((item) => item.href.trim().length > 0);
-}
-
+/**
+ * Подвал — только навигация, контакты и копирайт.
+ *
+ * Призыва к действию здесь намеренно нет: каждая страница сайта уже
+ * заканчивается ContactSection с формой и прямыми контактами, поэтому кнопка
+ * в подвале дублировала заголовок блока прямо над собой, а на /contacts вела
+ * сама на себя. Если понадобится вернуть — сначала убрать ContactSection
+ * с той страницы, где он не нужен.
+ */
 export function Footer({
   locale,
   dict,
@@ -31,24 +30,8 @@ export function Footer({
     <footer className="relative overflow-hidden bg-ink-soft">
       <div className="grain-overlay" />
 
-      <div className="container-page relative pt-24 pb-12 md:pt-36">
-        <Reveal>
-          <p className="eyebrow">{dict.cta.label}</p>
-        </Reveal>
-
-        <div className="mt-8 flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
-          <Reveal delay={0.05}>
-            <h2 className="display-lg max-w-2xl text-sand">{dict.cta.title}</h2>
-          </Reveal>
-
-          <Reveal delay={0.12}>
-            <ButtonLink href={localePath(locale, "/contacts")} size="lg" variant="solid">
-              {dict.nav.cta}
-            </ButtonLink>
-          </Reveal>
-        </div>
-
-        <div className="hairline mt-20 grid gap-12 pt-12 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="container-page relative pt-20 pb-12 md:pt-24">
+        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <p className="wordmark text-xl text-sand">{settings.siteName}</p>
             <p className="mt-3 text-sm leading-relaxed text-muted">{t(settings.role, locale)}</p>

@@ -58,7 +58,7 @@ export function ContactSection({
                 {settings.email && (
                   <a
                     href={`mailto:${settings.email}`}
-                    className="link-underline block font-display text-2xl text-sand transition-colors duration-500 hover:text-accent md:text-3xl"
+                    className="link-underline block w-fit font-display text-2xl text-sand transition-colors duration-500 hover:text-accent md:text-3xl"
                   >
                     {settings.email}
                   </a>
@@ -66,7 +66,7 @@ export function ContactSection({
                 {settings.phone && (
                   <a
                     href={`tel:${settings.phone.replace(/[^+\d]/g, "")}`}
-                    className="link-underline block font-display text-2xl text-sand transition-colors duration-500 hover:text-accent md:text-3xl"
+                    className="link-underline block w-fit font-display text-2xl text-sand transition-colors duration-500 hover:text-accent md:text-3xl"
                   >
                     {settings.phone}
                   </a>

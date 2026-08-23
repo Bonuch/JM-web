@@ -23,6 +23,15 @@ export function localePath(locale: Locale, path = "/"): string {
   return `/${locale}${clean}`;
 }
 
+/**
+ * Локаль из адреса: "/en/portfolio" -> "en". Нужна там, где params недоступны:
+ * постоянный каркас сайта лежит выше сегмента [locale] и узнаёт язык только так.
+ */
+export function localeFromPath(pathname: string): Locale {
+  const first = pathname.split("/")[1];
+  return isLocale(first) ? first : DEFAULT_LOCALE;
+}
+
 /** Русское склонение: 1 проект / 2 проекта / 5 проектов. */
 export function plural(count: number, dict: Dictionary): string {
   const mod10 = count % 10;

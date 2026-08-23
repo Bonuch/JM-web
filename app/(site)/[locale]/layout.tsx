@@ -1,37 +1,14 @@
-import type { Metadata, Viewport } from "next";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Inter } from "next/font/google";
 import type { ReactNode } from "react";
-import "@/app/globals.css";
 
-import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
+import { getDictionary, isLocale } from "@/lib/i18n";
 import { getSettings } from "@/lib/content";
 import { LOCALES } from "@/lib/types";
-import { SmoothScroll } from "@/components/motion/SmoothScroll";
-import { CustomCursor } from "@/components/motion/CustomCursor";
-import { Header } from "@/components/site/Header";
-import { Footer, socialLinks } from "@/components/site/Footer";
-import { ScrollProgress } from "@/components/site/ScrollProgress";
-import { SiteLoading } from "@/components/site/Preloader";
-import { SiteAnalytics } from "@/components/site/Analytics";
-
-// Переменное начертание: подключаем без перечисления весов, чтобы были
-// доступны промежуточные значения (250, 275) — на них держатся заголовки.
-// Файл подгружает сам Next, обращений к Google из браузера не происходит.
-const inter = Inter({
-  subsets: ["latin", "cyrillic"],
-  variable: "--font-inter",
-  display: "swap",
-});
 
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));
 }
-
-export const viewport: Viewport = {
-  themeColor: "#0a0a0b",
-  colorScheme: "dark",
-};
 
 export async function generateMetadata({
   params,
@@ -67,6 +44,11 @@ export async function generateMetadata({
   };
 }
 
+/**
+ * Сегмент языка. Каркас сайта (шапка, подвал, прокрутка, заставка) поднят в
+ * (site)/layout — при смене языка он остаётся смонтированным, и меняется
+ * только то, что отдаёт этот сегмент.
+ */
 export default async function LocaleLayout({
   children,
   params,
@@ -77,33 +59,16 @@ export default async function LocaleLayout({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
 
-  const typedLocale: Locale = locale;
-  const dict = getDictionary(typedLocale);
-  const settings = await getSettings();
-
   return (
-    <html lang={typedLocale} className={inter.variable}>
-      <body className="bg-ink text-sand antialiased">
-        <SiteLoading>
-          <SmoothScroll>
-            <ScrollProgress />
-            <CustomCursor />
-            <Header
-              locale={typedLocale}
-              dict={dict}
-              siteName={settings.siteName}
-              contacts={{
-                email: settings.email,
-                phone: settings.phone,
-                socials: socialLinks(settings),
-              }}
-            />
-            <main id="main">{children}</main>
-            <Footer locale={typedLocale} dict={dict} settings={settings} />
-          </SmoothScroll>
-        </SiteLoading>
-        <SiteAnalytics />
-      </body>
-    </html>
+    <>
+      {/* Корневой layout про язык не знает и ставит в <html lang> значение по
+          умолчанию. Правим его здесь, до отрисовки содержимого страницы. */}
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `document.documentElement.lang=${JSON.stringify(locale)}`,
+        }}
+      />
+      {children}
+    </>
   );
 }

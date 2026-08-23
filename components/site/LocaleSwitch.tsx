@@ -6,6 +6,10 @@ import { LOCALES, type Locale } from "@/lib/types";
 /**
  * Переключает язык, оставаясь на той же странице: /ru/portfolio -> /en/portfolio.
  * Выбор запоминается в куке, которую читает proxy при заходе на голый URL.
+ *
+ * Переход — обычная клиентская навигация без refresh: каркас сайта смонтирован
+ * выше сегмента языка и переживает её, поэтому меняется только содержимое.
+ * scroll: false оставляет читателя на том же месте страницы.
  */
 export function LocaleSwitch({ locale, label }: { locale: Locale; label: string }) {
   const router = useRouter();
@@ -16,8 +20,7 @@ export function LocaleSwitch({ locale, label }: { locale: Locale; label: string 
   const switchLocale = () => {
     document.cookie = `NEXT_LOCALE=${target}; path=/; max-age=${60 * 60 * 24 * 365}; samesite=lax`;
     const rest = pathname.replace(new RegExp(`^/${locale}`), "");
-    router.push(`/${target}${rest}`);
-    router.refresh();
+    router.push(`/${target}${rest}`, { scroll: false });
   };
 
   return (

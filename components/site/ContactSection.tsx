@@ -3,7 +3,7 @@ import type { Settings } from "@/lib/types";
 import { Reveal } from "@/components/motion/Reveal";
 import { TextReveal } from "@/components/motion/TextReveal";
 import { LeadForm } from "./LeadForm";
-import { socialLinks } from "./Footer";
+import { socialLinks } from "@/lib/socials";
 
 /**
  * Финальный экран убеждения: слева — способы связаться напрямую (кто-то

@@ -121,7 +121,6 @@ function FeaturedCard({
   return (
     <Link
       href={localePath(locale, `/portfolio/${project.slug}`)}
-      data-cursor={dict.common.viewProject}
       className="group block"
     >
       <div className="relative aspect-[4/3] overflow-hidden bg-surface">

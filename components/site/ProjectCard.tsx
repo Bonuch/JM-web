@@ -31,7 +31,6 @@ export function ProjectCard({
   return (
     <Link
       href={localePath(locale, `/portfolio/${project.slug}`)}
-      data-cursor={dict.common.viewProject}
       className="group block"
     >
       <div className={cn("relative overflow-hidden bg-surface", aspect)}>

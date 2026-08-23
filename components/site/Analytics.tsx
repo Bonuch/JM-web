@@ -33,10 +33,19 @@ export function SiteAnalytics() {
     trackPageView(window.location.href);
   }, [pathname, counterId]);
 
+  // В разработке эти пакеты грузят отладочные скрипты со своего домена и всё
+  // равно ничего не считают. Локальной работе это только мешает: лишние
+  // внешние запросы и ошибки в консоли, когда сети нет.
+  const collectVercelStats = process.env.NODE_ENV === "production";
+
   return (
     <>
-      <VercelAnalytics />
-      <SpeedInsights />
+      {collectVercelStats && (
+        <>
+          <VercelAnalytics />
+          <SpeedInsights />
+        </>
+      )}
 
       {counterId && (
         <>

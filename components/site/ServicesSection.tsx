@@ -52,7 +52,9 @@ export function ServicesSection({
                 </span>
 
                 <span className="flex-1">
-                  <span className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                  {/* Метку равняем по центру, а не по базовой линии: у пилюли
+                      свои поля, и по базовой линии она провисает под заголовок. */}
+                  <span className="flex flex-wrap items-center gap-x-4 gap-y-1">
                     <span
                       className={cn(
                         "display-md transition-colors duration-500",
@@ -79,15 +81,17 @@ export function ServicesSection({
                   </span>
                 </span>
 
+                {/* Штрих 2px в боксе 32px ложится на целый пиксель: тонкая линия
+                    вставала на пол-пикселя и при повороте в крест «плыла». */}
                 <span
                   className={cn(
-                    "relative ml-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border transition-all duration-500",
-                    open ? "rotate-45 border-accent text-accent" : "border-line-strong text-sand-dim",
+                    "relative ml-2 flex h-8 w-8 shrink-0 items-center justify-center transition-[rotate,color] duration-500",
+                    open ? "rotate-45 text-accent" : "text-sand-dim",
                   )}
                   aria-hidden="true"
                 >
-                  <span className="absolute h-px w-3 bg-current" />
-                  <span className="absolute h-3 w-px bg-current" />
+                  <span className="absolute h-0.5 w-4 bg-current" />
+                  <span className="absolute h-4 w-0.5 bg-current" />
                 </span>
               </button>
 

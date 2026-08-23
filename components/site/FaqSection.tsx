@@ -42,8 +42,8 @@ export function FaqSection({ items, locale }: { items: FaqItem[]; locale: Locale
                   )}
                   aria-hidden="true"
                 >
-                  <span className="absolute h-px w-3 bg-current" />
-                  <span className="absolute h-3 w-px bg-current" />
+                  <span className="absolute h-0.5 w-4 bg-current" />
+                  <span className="absolute h-4 w-0.5 bg-current" />
                 </span>
               </button>
 

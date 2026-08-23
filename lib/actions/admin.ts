@@ -35,11 +35,22 @@ export type ActionResult<T = undefined> =
   | (T extends undefined ? { ok: true } : { ok: true; data: T })
   | { ok: false; error: string };
 
+/**
+ * Приватное хранилище не отдаёт файлы по прямой ссылке, а сайту это нужно:
+ * картинки открываются браузером напрямую с CDN. Ошибку про access стоит
+ * объяснить словами, иначе она читается как сбой сайта.
+ */
+const PRIVATE_STORE_HINT =
+  "Хранилище создано с приватным доступом, а сайту нужны публичные файлы: изображения открываются в браузере по прямой ссылке. Создайте публичное хранилище (Storage → Create → Blob) и подключите его к проекту.";
+
 function describeFailure(error: unknown): string {
   const message = error instanceof Error ? error.message : String(error);
 
   if (message === "UNAUTHORIZED") {
     return "Сессия истекла — войдите заново.";
+  }
+  if (/private store|private access/i.test(message)) {
+    return PRIVATE_STORE_HINT;
   }
   // на Vercel диск доступен только для чтения: так выглядит запись без Blob
   if (/EROFS|read-only|ENOENT|EACCES|EPERM/i.test(message)) {
@@ -302,10 +313,13 @@ export async function checkStorageAction(): Promise<StorageCheck> {
           : "Файлы сохраняются в папку проекта. Для локальной разработки это нормально.",
     };
   } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
     return {
       ...base,
       ok: false,
-      message: `Ошибка хранилища: ${error instanceof Error ? error.message : String(error)}`,
+      message: /private store|private access/i.test(message)
+        ? `${PRIVATE_STORE_HINT} Исходная ошибка: ${message}`
+        : `Ошибка хранилища: ${message}`,
     };
   }
 }

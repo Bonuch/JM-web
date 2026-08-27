@@ -8,12 +8,20 @@ import { getStorage, isReadOnlyDeployment } from "@/lib/storage";
  * грузит оригинал прямо в Blob (см. /api/admin/blob-upload), потому что
  * serverless-функция не пропустила бы файл тяжелее 4.5 МБ.
  */
+/**
+ * SVG в списке ради логотипа — вектор для него единственный честный формат.
+ * Загрузить файл может только администратор, а на странице логотип стоит
+ * в <img>, где скрипты внутри SVG не выполняются. Открытым по прямой ссылке
+ * он опасен только локально: на Vercel файлы отдаёт домен Blob, отдельный
+ * от домена сайта.
+ */
 const ALLOWED_TYPES = [
   "image/webp",
   "image/jpeg",
   "image/png",
   "image/avif",
   "image/tiff",
+  "image/svg+xml",
   "application/octet-stream",
 ];
 

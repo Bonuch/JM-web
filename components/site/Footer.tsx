@@ -4,6 +4,7 @@ import Link from "next/link";
 import { localePath, t, type Dictionary, type Locale } from "@/lib/i18n";
 import type { Settings } from "@/lib/types";
 import { socialLinks } from "@/lib/socials";
+import { Wordmark } from "./Wordmark";
 
 /**
  * Подвал — только навигация, контакты и копирайт.
@@ -33,7 +34,12 @@ export function Footer({
       <div className="container-page relative pt-20 pb-12 md:pt-24">
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <p className="wordmark text-xl text-sand">{settings.siteName}</p>
+            <Wordmark
+              logo={settings.logo}
+              siteName={settings.siteName}
+              imageClassName="h-7 max-w-full object-contain"
+              textClassName="wordmark block text-xl text-sand"
+            />
             <p className="mt-3 text-sm leading-relaxed text-muted">{t(settings.role, locale)}</p>
             <p className="mt-1 text-sm text-muted">{t(settings.city, locale)}</p>
           </div>

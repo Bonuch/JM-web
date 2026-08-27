@@ -14,6 +14,8 @@ const ALLOWED_CONTENT_TYPES = [
   "image/webp",
   "image/avif",
   "image/tiff",
+  // вектор нужен логотипу; почему это безопасно — в /api/admin/upload
+  "image/svg+xml",
 ];
 
 const MAX_UPLOAD_BYTES = 200 * 1024 * 1024;

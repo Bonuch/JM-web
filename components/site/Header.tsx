@@ -13,8 +13,10 @@ import {
 import { cn } from "@/lib/cn";
 import { localePath } from "@/lib/i18n";
 import type { Dictionary, Locale } from "@/lib/i18n";
+import type { ImageAsset } from "@/lib/types";
 import { ArrowRight, ButtonLink } from "@/components/ui/Button";
 import { LocaleSwitch } from "./LocaleSwitch";
+import { Wordmark } from "./Wordmark";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 const MENU_ID = "mobile-menu";
@@ -27,6 +29,8 @@ type HeaderProps = {
   locale: Locale;
   dict: Dictionary;
   siteName: string;
+  /** Логотип; пока не загружен — в шапке стоит название */
+  logo: ImageAsset | null;
   /** Прямые контакты дублируются в меню: с телефона проще нажать, чем искать в подвале. */
   contacts: { email: string; phone: string; socials: SocialLink[] };
 };
@@ -158,7 +162,7 @@ function MenuToggle({
   );
 }
 
-export function Header({ locale, dict, siteName, contacts }: HeaderProps) {
+export function Header({ locale, dict, siteName, logo, contacts }: HeaderProps) {
   const pathname = usePathname();
   const { scrollY } = useScroll();
   const reduce = useReducedMotion() ?? false;
@@ -233,9 +237,18 @@ export function Header({ locale, dict, siteName, contacts }: HeaderProps) {
         <div className="container-page flex h-[4.5rem] items-center justify-between gap-6 md:h-20">
           <Link
             href={localePath(locale)}
-            className="wordmark text-lg leading-none text-sand transition-colors duration-300 hover:text-accent md:text-xl"
+            className="flex items-center text-sand transition-colors duration-300 hover:text-accent"
           >
-            {siteName}
+            <Wordmark
+              logo={logo}
+              siteName={siteName}
+              // Ширину логотип берёт по своим пропорциям, но растянутый
+              // знак не должен доезжать до кнопки меню: потолок ширины
+              // вместе с object-contain ужимает такой файл целиком,
+              // а не сплющивает его.
+              imageClassName="h-6 max-w-[55vw] object-contain md:h-7 md:max-w-[18rem]"
+              textClassName="wordmark text-lg leading-none md:text-xl"
+            />
           </Link>
 
           <nav className="hidden items-center gap-10 md:flex">

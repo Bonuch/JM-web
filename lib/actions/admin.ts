@@ -235,11 +235,19 @@ export async function saveSettingsAction(settings: Settings): Promise<ActionResu
   try {
     await requireAdmin();
 
-    // если из настроек убрали hero-изображение, удаляем и файл
+    // Картинку в настройках заменили или убрали — прежний файл больше ничей,
+    // и в хранилище ему делать нечего. Логотип хранит один и тот же адрес
+    // во всех трёх полях, поэтому список чистим от повторов.
     const current = await getSiteData();
-    const previousHero = current.settings.heroImage;
-    if (previousHero && previousHero.id !== settings.heroImage?.id) {
-      await getStorage().deleteFiles(assetUrls([previousHero]));
+    const dropped = [
+      [current.settings.heroImage, settings.heroImage],
+      [current.settings.logo, settings.logo],
+    ]
+      .filter(([was, now]) => was && was.id !== now?.id)
+      .map(([was]) => was);
+
+    if (dropped.length > 0) {
+      await getStorage().deleteFiles([...new Set(assetUrls(dropped))]);
     }
 
     await saveSettings(settings);

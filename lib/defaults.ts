@@ -7,6 +7,7 @@ import type { Settings } from "./types";
 export function defaultSettings(): Settings {
   return {
     siteName: "IK Visual",
+    logo: null,
     originalQuality: true,
     role: {
       ru: "3D-визуализация интерьеров",

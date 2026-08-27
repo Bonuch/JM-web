@@ -12,6 +12,7 @@ import {
 import type { FaqItem, ImageAsset, Localized, ServiceItem, Settings, StatItem } from "@/lib/types";
 import type { StorageKind } from "@/lib/image-processing";
 import { ImageUploader } from "./ImageUploader";
+import { LogoUploader } from "./LogoUploader";
 import { Label, LocalizedField, TextField, Toggle } from "./Fields";
 
 type TabId = "main" | "contacts" | "services" | "faq" | "stats" | "notifications";
@@ -111,8 +112,25 @@ export function SettingsEditor({
               label="Название сайта"
               value={settings.siteName}
               onChange={(value) => patch("siteName", value)}
-              hint="выводится в шапке и подвале"
+              hint="в шапке и подвале, если не загружен логотип"
             />
+
+            <LogoUploader
+              logo={settings.logo}
+              siteName={settings.siteName}
+              onChange={(logo) => patch("logo", logo)}
+              storageKind={storageKind}
+            />
+            <p className="text-xs leading-relaxed text-muted">
+              Нужен именно знак, а не картинка со знаком. Логотип встаёт на место названия высотой
+              24–28 px, ширину берёт по пропорциям файла — поэтому обрежьте поля по краям вплотную
+              к буквам и уберите фон. Баннер с залитым фоном ужмётся целиком, и надпись внутри него
+              станет высотой в пару пикселей. Растровый готовьте с запасом втрое, около 90 px
+              в высоту: экраны бывают плотные. Как всё это выглядит на сайте — видно в рамке выше.
+              Название при этом никуда не девается: оно остаётся подписью к ссылке для читалок
+              и поисковиков.
+            </p>
+
             <LocalizedField
               label="Специализация"
               value={settings.role}

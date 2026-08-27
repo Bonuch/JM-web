@@ -43,6 +43,7 @@ export function SiteShell({ settings, children }: { settings: Settings; children
           locale={locale}
           dict={dict}
           siteName={settings.siteName}
+          logo={settings.logo}
           contacts={{
             email: settings.email,
             phone: settings.phone,

@@ -173,6 +173,90 @@ export async function uploadImage(
   };
 }
 
+/**
+ * Размеры SVG из самой разметки: createImageBitmap векторы не открывает
+ * ни в одном браузере, а next/image без ширины и высоты не построит рамку
+ * под картинку и страница будет прыгать при загрузке.
+ *
+ * viewBox точнее атрибутов width/height: он есть почти всегда и задаёт
+ * пропорцию, тогда как width может стоять в процентах или em.
+ */
+async function svgSize(file: File): Promise<{ width: number; height: number }> {
+  const markup = await file.text();
+
+  const viewBox = markup.match(
+    /viewBox\s*=\s*["']\s*[\d.eE+-]+[\s,]+[\d.eE+-]+[\s,]+([\d.eE+]+)[\s,]+([\d.eE+]+)/i,
+  );
+  if (viewBox) {
+    return { width: Math.round(Number(viewBox[1])), height: Math.round(Number(viewBox[2])) };
+  }
+
+  const width = markup.match(/\bwidth\s*=\s*["']([\d.]+)(?:px)?["']/i);
+  const height = markup.match(/\bheight\s*=\s*["']([\d.]+)(?:px)?["']/i);
+  if (width && height) {
+    return { width: Math.round(Number(width[1])), height: Math.round(Number(height[1])) };
+  }
+
+  throw new Error("SVG_NO_SIZE");
+}
+
+/**
+ * Загрузка логотипа.
+ *
+ * От рендера он отличается всем: весит килобайты, показывается высотой
+ * в пару десятков пикселей и чаще всего приходит вектором. Поэтому превью
+ * ему не готовятся — они были бы тяжелее оригинала, — а в хранилище уходит
+ * ровно один файл.
+ */
+export async function uploadLogo(
+  file: File,
+  storageKind: StorageKind,
+  onProgress?: (progress: UploadProgress) => void,
+): Promise<ImageAsset> {
+  onProgress?.({ stage: "preparing", ratio: 0 });
+
+  let width: number;
+  let height: number;
+
+  if (file.type === "image/svg+xml") {
+    ({ width, height } = await svgSize(file));
+  } else {
+    const bitmap = await createImageBitmap(file);
+    width = bitmap.width;
+    height = bitmap.height;
+    bitmap.close();
+  }
+
+  const id = crypto.randomUUID();
+
+  onProgress?.({ stage: "uploading", ratio: 0 });
+
+  const url = await putFile(
+    `uploads/${new Date().getFullYear()}/${id}-logo.${extensionFor(file)}`,
+    file,
+    file.type || "application/octet-stream",
+    storageKind,
+    (ratio) => onProgress?.({ stage: "uploading", ratio }),
+  );
+
+  onProgress?.({ stage: "uploading", ratio: 1 });
+
+  return {
+    id,
+    url,
+    // Превью нет: везде показывается сам файл. Поля заполнены им же, чтобы
+    // остальной код — удаление файлов, галереи — не спотыкался о пустоту.
+    mediumUrl: url,
+    thumbUrl: url,
+    width,
+    height,
+    blurDataURL: "",
+    bytes: file.size,
+    format: file.type || "image/*",
+    alt: { ru: "", en: "" },
+  };
+}
+
 /** «12.4 МБ» — для показа веса оригинала в админке. */
 export function formatBytes(bytes: number): string {
   if (!bytes) return "";
